@@ -241,22 +241,22 @@ class Header extends React.Component {
             <List style={{ width: '100%' }}>
               
               <ListItem button>
-                <Link to={"/list_orders/"}>
+                <Link to={"/list_orders"}>
                   <ListItemText primary={ 'Список заказов' } />
                 </Link>
               </ListItem>
               <ListItem button>
-                <Link to={"/map_orders/"}>
+                <Link to={"/map_orders"}>
                   <ListItemText primary={ 'Карта заказов' } />
                 </Link>
               </ListItem>
               <ListItem button>
-                <Link to={"/map_orders/"}>
+                <Link to={"/price"}>
                   <ListItemText primary={ 'Расчет' } />
                 </Link>
               </ListItem>
               <ListItem button>
-                <Link to={"/map_orders/"}>
+                <Link to={"/map_orders"}>
                   <ListItemText primary={ 'График работы' } />
                 </Link>
               </ListItem>

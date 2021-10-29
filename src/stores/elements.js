@@ -181,6 +181,38 @@ export class MyTimePicker extends React.PureComponent {
     )
   }
 }
+
+export class MyDatePicker extends React.PureComponent {
+  constructor(props) {
+    super(props);
+        
+    this.state = {
+      classes: this.props.classes,
+    };
+  }
+  
+  render(){
+    return (
+      <TextField
+        variant="outlined"
+        size="small"
+        color="primary"
+        label={this.props.label}
+        type="date"
+        value={ this.props.value }
+        //className={this.state.classes.timePicker}
+        onChange={this.props.func}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        inputProps={{
+          step: 300, // 5 min
+        }}
+      />
+    )
+  }
+}
+
 /*
 export class MyDatePicker extends React.PureComponent {
   constructor(props) {

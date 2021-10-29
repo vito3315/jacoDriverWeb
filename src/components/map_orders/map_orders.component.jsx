@@ -13,7 +13,7 @@ import { CardItemList } from '../list_orders/';
 
 import CachedIcon from '@mui/icons-material/Cached';
 
-import { YMaps, Map, Placemark } from 'react-yandex-maps';
+import { YMaps, Map, Placemark, TrafficControl, ZoomControl } from 'react-yandex-maps';
 
 const queryString = require('query-string');
 
@@ -257,6 +257,11 @@ class MapOrders_ extends React.Component {
             <YMaps>
               <Map style={{ width: window.screen.width+60, height: window.screen.height-40 }} defaultState={{ center: [this.state.home.latitude, this.state.home.longitude], zoom: 11 }}>
                 
+                <TrafficControl options={{ position: {
+                  top: 60
+                }  }} />
+                <ZoomControl options={{ float: 'right' }} />
+                
                 <Placemark 
                   geometry={[this.state.home.latitude, this.state.home.longitude]} 
                   options={{ preset: 'islands#blackDotIcon', iconColor: 'black' }} />
@@ -271,7 +276,7 @@ class MapOrders_ extends React.Component {
                     }} 
                     options={{ 
                       preset: 'islands#circleDotIcon', 
-                      iconColor: parseInt(item.is_get) == 0 ? parseInt(item.status_order) > 1 ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : '#fc2847' 
+                      iconColor: parseInt(item.is_get) == 0 ? parseInt(item.status_order) > 1 ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
                     }} />  
                 )}
               </Map>

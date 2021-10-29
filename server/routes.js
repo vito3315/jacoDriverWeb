@@ -4,7 +4,7 @@ const { Reg } = require( '../src/components/registration' );
 
 const { ListOrders } = require( '../src/components/list_orders' );
 const { MapOrders } = require( '../src/components/map_orders' );
-
+const { Price } = require( '../src/components/price' );
 
 
 module.exports = [
@@ -37,7 +37,13 @@ module.exports = [
         title: 'Карта заказов',
         code: 200
     },
-    
+    {
+        path: '/price',
+        exact: true,
+        component: Price,
+        title: 'Расчет',
+        code: 200
+    },
     
     
     
