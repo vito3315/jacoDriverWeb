@@ -1,0 +1,68 @@
+.container {
+    display: flex; 
+    flex-direction: column; 
+    width: 100%; 
+    height: 100%;
+    flex: 1;
+    padding: 10px; 
+    background-color: #fff; 
+    border-radius: 5px;
+
+    -webkit-box-shadow: 1px 1px 10px 0px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow:    1px 1px 10px 0px rgba(50, 50, 50, 0.75);
+    box-shadow:         1px 1px 10px 0px rgba(50, 50, 50, 0.75);
+}
+  
+.textBold {
+    font-size: 1rem!important; 
+    font-weight: bold!important;
+    color: #000
+}
+
+.text{
+    font-size: 1rem!important; 
+    color: #000
+}
+
+.typeItems {
+    text-align: center; 
+    color: white; 
+    padding-top: 3px; 
+    padding-bottom: 3px; 
+    padding-left: 10px; 
+    padding-right: 10px; 
+    border-radius: 5px; 
+    overflow: 'hidden'; 
+    border-width: 1px; 
+}
+.typeItemsBlue{
+    background-color: #2c75ff!important; 
+    border-color: #2c75ff!important;
+    color: #fff!important;
+}
+.typeItemsRed{
+    background-color: #fc2847!important; 
+    border-color: #fc2847!important;
+    color: #fff!important;
+}
+.typeItemsGreen{
+    background-color: #3caa3c!important; 
+    border-color: #3caa3c!important;
+    color: #fff!important;
+}
+.typeItemsGray{
+    background-color: #bababa!important; 
+    border-color: #bababa!important;
+    color: #000!important;
+}
+.bntAction{
+    height: 30px; 
+    display: flex; 
+    flex-direction: row; 
+    align-items: center; 
+    justify-content: center; 
+    border-radius: 5px
+}
+.MuiTooltip-popper{
+    margin-top: 0!important;
+}

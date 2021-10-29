@@ -11,29 +11,19 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 
 import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 
 import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { NavLink as Link, Switch, Route, Redirect } from 'react-router-dom';
 
 import { useHistory } from "react-router-dom";
-
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
 
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 
@@ -53,7 +43,7 @@ const theme = createTheme({
     },
 });
 
-const drawerWidth = 300;
+const drawerWidth = 250;
 
 const useStyles = makeStyles({
   root: {
@@ -119,7 +109,7 @@ const useStyles = makeStyles({
     overflow: 'auto',
   },
   container: {
-    paddingTop: theme.spacing(4),
+    paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(4),
     width: '100%',
   },
@@ -148,6 +138,7 @@ class Header extends React.Component {
       history: this.props.history,
       
       module: 'header',
+      title: '',
       
       open: false,
       menu: [],
@@ -157,14 +148,22 @@ class Header extends React.Component {
     };
   }
   
-  async componentDidMount(){
+  componentDidMount(){
     
-    let data = await this.getData('get_all');
+    let thisUri = window.location.pathname;
+    
+    if( thisUri == '/' || thisUri == '' ){
+      this.state.history.push("/list_orders");
+      window.location.reload();
+    }
+    
+    let find_route = routes.find( (item) => thisUri.includes(item.path) );
     
     this.setState({
-      menu: data.info.left_menu,
-      full_menu: data.info.full_menu,
+      title: find_route.title
     })
+    
+    window.document.title = find_route.title;
   }
   
   getData = (method, data = {}) => {
@@ -226,14 +225,8 @@ class Header extends React.Component {
             >
               <MenuIcon />
             </IconButton>
-            <Typography component="h1" variant="h6" color="inherit" noWrap className={this.state.classes.title}>
-              Dashboard
-            </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+            <Typography component="h1" variant="h6" color="inherit" noWrap className={this.state.classes.title}>{this.state.title}</Typography>
+            
           </Toolbar>
         </AppBar>
         
@@ -245,58 +238,32 @@ class Header extends React.Component {
             onClose={ () => { this.setState({ open: false }) } }
             onOpen={ () => { this.setState({ open: true }) } }
           >
-            <div className={this.state.classes.toolbarIcon}>
-            
-              <Autocomplete
-                size="small"
-                options={this.state.full_menu}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  if( newValue ){
-                    this.state.history.push("/"+newValue.key_query+"/");
-                  }
-                }}
-                style={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="Поиск" variant="outlined" />}
-              />
+            <List style={{ width: '100%' }}>
               
-              <IconButton onClick={this.handleDrawerClose.bind(this)}>
-                <ChevronLeftIcon />
-              </IconButton>
-            </div>
-            <Divider />
-            
-            { this.state.menu.map( (item, key) =>
-              <Accordion key={key} >
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <Typography className={this.state.classes.heading}>{ item.parent.name }</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  
-                  <List style={{ width: '100%' }}>
-                  
-                    { item.chaild.map( (it, k) =>
-                      <ListItem button key={k}>
-                        <Link to={"/"+it.key_query+"/"}>
-                          <ListItemText primary={ it.name } />
-                        </Link>
-                      </ListItem>
-                    ) }
-                  
-                  </List>
-                  
-                </AccordionDetails>
-              </Accordion>
-            ) }
+              <ListItem button>
+                <Link to={"/list_orders/"}>
+                  <ListItemText primary={ 'Список заказов' } />
+                </Link>
+              </ListItem>
+              <ListItem button>
+                <Link to={"/map_orders/"}>
+                  <ListItemText primary={ 'Карта заказов' } />
+                </Link>
+              </ListItem>
+              <ListItem button>
+                <Link to={"/map_orders/"}>
+                  <ListItemText primary={ 'Расчет' } />
+                </Link>
+              </ListItem>
+              <ListItem button>
+                <Link to={"/map_orders/"}>
+                  <ListItemText primary={ 'График работы' } />
+                </Link>
+              </ListItem>
+              
+            </List>
           </SwipeableDrawer>
         </React.Fragment>
-        
-        
-        
       </>
     )
   }

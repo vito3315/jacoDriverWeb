@@ -87,30 +87,15 @@ class Auth_ extends React.Component {
       is_load: true
     })
     
-    return fetch('https://jacochef.ru/api/index_new.php', {
+    return fetch('https://jacochef.ru/api/site/driver.php', {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
       body: queryString.stringify({
-        method: method, 
-        module: this.state.module,
-        version: 2,
-        login: '+79879340391',
-        //login: localStorage.getItem('login'),
+        type: method, 
         data: JSON.stringify( data )
       })
     }).then(res => res.json()).then(json => {
-      
-      if( json.st === false && json.type == 'redir' ){
-        this.state.history.push("/");
-        return;
-      }
-      
-      if( json.st === false && json.type == 'auth' ){
-        this.state.history.push("/auth");
-        return;
-      }
-      
       setTimeout( () => {
         this.setState({
           is_load: false
@@ -147,8 +132,6 @@ class Auth_ extends React.Component {
     
     let res = await this.getData('auth', data);
     
-    console.log( res )
-    
     if( res.st === false ){
       setTimeout( () => {
         this.setState({ 
@@ -161,7 +144,7 @@ class Auth_ extends React.Component {
       localStorage.setItem('token', res.token)
       
       setTimeout( () => {
-        window.location.pathname = '/'
+        window.location.pathname = '/list_orders'
       }, 300)
     }
   }
