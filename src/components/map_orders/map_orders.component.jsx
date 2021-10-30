@@ -13,13 +13,12 @@ import { CardItemList } from '../list_orders/';
 
 import CachedIcon from '@mui/icons-material/Cached';
 
-import { YMaps, Map, Placemark, TrafficControl, ZoomControl } from 'react-yandex-maps';
-
 const queryString = require('query-string');
 
 class MapOrders_ extends React.Component {
   timerId = null;
   _isMounted = false;
+  map = null;
   
   constructor(props) {
     super(props);
@@ -56,6 +55,10 @@ class MapOrders_ extends React.Component {
   
   async componentDidMount(){
     this._isMounted = true;
+    
+    
+    
+    
     
     if( localStorage.getItem('token') && localStorage.getItem('token').length > 0 ){
       
@@ -141,6 +144,121 @@ class MapOrders_ extends React.Component {
           home: res.home,
           is_load: false
         })
+        
+        let objectManager = new ymaps.ObjectManager();
+        
+        if( !this.map ){
+          ymaps.ready(() => {
+            this.map = new ymaps.Map('map', {
+              center: [res.home.latitude, res.home.longitude],
+              //center: [55.76, 37.64],
+              zoom: 11
+            }, {
+              searchControlProvider: 'yandex#search'
+            })
+            
+            //дом
+            let myGeoObject = new ymaps.GeoObject({
+              geometry: {
+                type: "Point",
+                coordinates: [res.home.latitude, res.home.longitude]
+              },
+            }, {
+              preset: 'islands#blackDotIcon', 
+              iconColor: 'black'
+            })
+            
+            this.map.geoObjects.add(myGeoObject);
+            
+            
+            
+            let json = {
+              "type": "FeatureCollection",
+              "features": []
+            };
+                    
+            res.orders.map( function(item){
+              
+              json.features.push({
+                type: "Feature",
+                id: item.id,
+                options: {
+                  preset: 'islands#circleDotIcon', 
+                  iconColor: parseInt(item.is_get) == 0 ? parseInt(item.status_order) > 1 ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
+                },
+                properties: {
+                  iconCaption: parseInt(item.is_pred) == 1 ? item.need_time : ''
+                },
+                geometry: {
+                  type: "Point",
+                  coordinates: [item.xy.latitude, item.xy.longitude]
+                },
+              })
+              
+            } )
+            
+            objectManager.add(json);
+            this.map.geoObjects.add(objectManager);
+            
+            
+          });
+        }else{
+          
+          //дом
+          let myGeoObject = new ymaps.GeoObject({
+            geometry: {
+              type: "Point",
+              coordinates: [res.home.latitude, res.home.longitude]
+            },
+          }, {
+            preset: 'islands#blackDotIcon', 
+            iconColor: 'black'
+          })
+          
+          this.map.geoObjects.add(myGeoObject);
+          
+          
+          
+          let json = {
+            "type": "FeatureCollection",
+            "features": []
+          };
+                  
+          res.orders.map( function(item){
+            
+            json.features.push({
+              type: "Feature",
+              id: item.id,
+              options: {
+                preset: 'islands#circleDotIcon', 
+                iconColor: parseInt(item.is_get) == 0 ? parseInt(item.status_order) > 1 ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
+              },
+              properties: {
+                iconCaption: parseInt(item.is_pred) == 1 ? item.need_time : ''
+              },
+              geometry: {
+                type: "Point",
+                coordinates: [item.xy.latitude, item.xy.longitude]
+              },
+            })
+            
+          } )
+          
+          this.map.geoObjects.removeAll()
+          
+          objectManager.add(json);
+          this.map.geoObjects.add(objectManager);
+          
+          
+        }
+        
+        objectManager.objects.events.add(['click'], (e) => {
+          let order_id = e.get('objectId');
+          let order = this.state.orders.find( (item) => parseInt(item.id) == parseInt(order_id) );
+          
+          this.showOrder(order);
+        });
+        
       }, 1000 )
     }
   }
@@ -215,6 +333,35 @@ class MapOrders_ extends React.Component {
   }
   
   render(){
+    
+    /*<YMaps>
+              <Map style={{ width: window.screen.width+60, height: window.screen.height-40 }} defaultState={{ center: [this.state.home.latitude, this.state.home.longitude], zoom: 11 }}>
+                
+                <TrafficControl options={{ position: {
+                  top: 60
+                }  }} />
+                <ZoomControl options={{ float: 'right' }} />
+                
+                <Placemark 
+                  geometry={[this.state.home.latitude, this.state.home.longitude]} 
+                  options={{ preset: 'islands#blackDotIcon', iconColor: 'black' }} />
+                
+                {this.state.orders.map( (item, key) =>
+                  <Placemark 
+                    key={key} 
+                    onClick={this.showOrder.bind(this, item)}
+                    geometry={[item.xy.latitude, item.xy.longitude]} 
+                    properties={{ 
+                      iconCaption: parseInt(item.is_pred) == 1 ? item.need_time : ''
+                    }} 
+                    options={{ 
+                      preset: 'islands#circleDotIcon', 
+                      iconColor: parseInt(item.is_get) == 0 ? parseInt(item.status_order) > 1 ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
+                    }} />  
+                )}
+              </Map>
+            </YMaps>*/
+    
     return (
       <>
         <Backdrop open={this.state.is_load}>
@@ -253,35 +400,9 @@ class MapOrders_ extends React.Component {
         
         <Grid style={{zIndex: 9, margin: -16}}>
           
-          { !this.state.home ? null :
-            <YMaps>
-              <Map style={{ width: window.screen.width+60, height: window.screen.height-40 }} defaultState={{ center: [this.state.home.latitude, this.state.home.longitude], zoom: 11 }}>
-                
-                <TrafficControl options={{ position: {
-                  top: 60
-                }  }} />
-                <ZoomControl options={{ float: 'right' }} />
-                
-                <Placemark 
-                  geometry={[this.state.home.latitude, this.state.home.longitude]} 
-                  options={{ preset: 'islands#blackDotIcon', iconColor: 'black' }} />
-                
-                {this.state.orders.map( (item, key) =>
-                  <Placemark 
-                    key={key} 
-                    onClick={this.showOrder.bind(this, item)}
-                    geometry={[item.xy.latitude, item.xy.longitude]} 
-                    properties={{ 
-                      iconCaption: parseInt(item.is_pred) == 1 ? item.need_time : ''
-                    }} 
-                    options={{ 
-                      preset: 'islands#circleDotIcon', 
-                      iconColor: parseInt(item.is_get) == 0 ? parseInt(item.status_order) > 1 ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
-                    }} />  
-                )}
-              </Map>
-            </YMaps>
-          }
+          
+          <div id="map" name="map" style={{ width: window.screen.width+60, height: window.screen.height-40 }} />
+                    
           
         </Grid>
       </>
