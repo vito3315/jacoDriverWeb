@@ -157,31 +157,33 @@ class Header extends React.Component {
     if( thisUri == '/' || thisUri == '' ){
       this.state.history.push("/list_orders");
       window.location.reload();
-    }
+    }else{
+      let find_route = routes.find( (item) => thisUri.includes(item.path) );
     
-    let find_route = routes.find( (item) => thisUri.includes(item.path) );
-    
-    this.setState({
-      title: find_route.title
-    })
-    
-    window.document.title = find_route.title;
-    
-    let data = {
-      token: localStorage.getItem('token')
-    };
-    
-    let res = await this.getData('getPointInfo', data);
-    
-    console.log( res )
-    
-    if( res ){
       this.setState({
-        phone_man: res.phone_man,
-        phone_center: res.phone_new,
-        phone_dir: res.phone_upr
+        title: find_route.title
       })
+      
+      window.document.title = find_route.title;
+      
+      let data = {
+        token: localStorage.getItem('token')
+      };
+      
+      let res = await this.getData('getPointInfo', data);
+      
+      console.log( res )
+      
+      if( res ){
+        this.setState({
+          phone_man: res.phone_man,
+          phone_center: res.phone_new,
+          phone_dir: res.phone_upr
+        })
+      }
     }
+    
+    
   }
   
   getData = (method, data = {}) => {

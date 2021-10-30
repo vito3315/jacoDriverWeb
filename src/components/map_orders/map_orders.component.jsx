@@ -56,14 +56,11 @@ class MapOrders_ extends React.Component {
   async componentDidMount(){
     this._isMounted = true;
     
-    
-    
-    
-    
     if( localStorage.getItem('token') && localStorage.getItem('token').length > 0 ){
       
     }else{
-      this.state.history.push("/Auth");
+      this.state.history.push("/auth");
+      window.location.reload();
     }
     
     navigator.geolocation.getCurrentPosition(success, error, {

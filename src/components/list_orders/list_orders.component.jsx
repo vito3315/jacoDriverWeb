@@ -246,7 +246,8 @@ class ListOrders_ extends React.Component {
     if( localStorage.getItem('token') && localStorage.getItem('token').length > 0 ){
       
     }else{
-      this.state.history.push("/Auth");
+      this.state.history.push("/auth");
+      window.location.reload();
     }
     
     navigator.geolocation.getCurrentPosition(success, error, {
