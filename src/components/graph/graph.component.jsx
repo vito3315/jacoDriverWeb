@@ -163,7 +163,7 @@ class Graph_ extends React.Component {
         <Grid container spacing={3} style={{ marginTop: 10 }}>
           
           <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <TableContainer sx={{ maxHeight: window.screen.height-120 }}>
+            <TableContainer sx={{ maxHeight: 600 }}>
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <TableRow>

@@ -336,7 +336,7 @@ class MapOrders_ extends React.Component {
           <CircularProgress color="inherit" />
         </Backdrop>
         
-        <div style={{ position: 'absolute', zIndex: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', left: 0 }}>
+        <div style={{ position: 'absolute', zIndex: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', left: 0, top: 100 }}>
           <Button style={{ marginLeft: 38 }} onClick={ () => { this.setState({ is_open: true }) } }>{this.state.type.text}</Button>
           
           <Button style={{ marginRight: 3 }} onClick={this.getOrders.bind(this, true, this.state.type.id)}><CachedIcon /></Button>
@@ -369,7 +369,7 @@ class MapOrders_ extends React.Component {
         <Grid style={{zIndex: 9, margin: -16}}>
           
           
-          <div id="map" name="map" style={{ width: '100%', height: '100%' }} />
+          <div id="map" name="map" style={{ width: '100%', height: 700, paddingTop: 10 }} />
                     
           
         </Grid>
