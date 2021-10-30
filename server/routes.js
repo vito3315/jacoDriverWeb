@@ -10,8 +10,8 @@ module.exports = [
     {
         path: '/',
         exact: true,
-        component: Auth,
-        title: 'Авторизация',
+        component: ListOrders,
+        title: 'Список заказов',
         code: 200
     },
     {
