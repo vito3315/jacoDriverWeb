@@ -1,7 +1,7 @@
 const path = require( 'path' );
 
 // ignore `.scss` imports
-require( 'ignore-styles' );
+//require( 'ignore-styles' );
 
 // transpile imports on the fly
 require( '@babel/register')( {
