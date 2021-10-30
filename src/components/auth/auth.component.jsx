@@ -211,7 +211,7 @@ class Auth_ extends React.Component {
                 >
                   Войти
                 </Button>
-                <Grid container>
+                <Grid container style={{ marginTop: 10 }}>
                   <Grid item xs>
                     <a href="/registration" className={this.state.classes.textLink}>Восстановить пароль</a>
                   </Grid>

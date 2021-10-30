@@ -13,11 +13,9 @@ import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
-import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import MenuIcon from '@mui/icons-material/Menu';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -43,7 +41,7 @@ const theme = createTheme({
     },
 });
 
-const drawerWidth = 250;
+const drawerWidth = 300;
 
 const useStyles = makeStyles({
   root: {
@@ -144,11 +142,15 @@ class Header extends React.Component {
       menu: [],
       full_menu: [],
       
-      left: false
+      left: false,
+      
+      phone_man: '',
+      phone_center: '',
+      phone_dir: ''
     };
   }
   
-  componentDidMount(){
+  async componentDidMount(){
     
     let thisUri = window.location.pathname;
     
@@ -164,38 +166,38 @@ class Header extends React.Component {
     })
     
     window.document.title = find_route.title;
+    
+    let data = {
+      token: localStorage.getItem('token')
+    };
+    
+    let res = await this.getData('getPointInfo', data);
+    
+    console.log( res )
+    
+    if( res ){
+      this.setState({
+        phone_man: res.phone_man,
+        phone_center: res.phone_new,
+        phone_dir: res.phone_upr
+      })
+    }
   }
   
   getData = (method, data = {}) => {
-    return fetch('https://jacochef.ru/api/index_new.php', {
+    return fetch('https://jacochef.ru/api/site/driver.php', {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
       body: queryString.stringify({
-        method: method, 
-        module: this.state.module,
-        version: 2,
-        login: localStorage.getItem('token'),
+        type: method, 
         data: JSON.stringify( data )
       })
     }).then(res => res.json()).then(json => {
-      
-      console.log( json )
-      
-      if( json.st === false && json.type == 'redir' ){
-        this.state.history.push("/");
-        return;
-      }
-      
-      if( json.st === false && json.type == 'auth' ){
-        window.location.pathname = '/auth';
-        return;
-      }
-      
       return json;
     })
     .catch(err => { 
-        console.log( err )
+      console.log( err )
     });
   }
   
@@ -209,6 +211,20 @@ class Header extends React.Component {
     this.setState({
       open: false
     })
+  }
+  
+  logOut(){
+    localStorage.removeItem('token');
+    this.state.history.push("/auth");
+    location.reload();
+  }
+  
+  goTo(title){
+    this.setState({
+      title: title
+    })
+    
+    window.document.title = title;
   }
   
   render(){
@@ -225,7 +241,7 @@ class Header extends React.Component {
             >
               <MenuIcon />
             </IconButton>
-            <Typography component="h1" variant="h6" color="inherit" noWrap className={this.state.classes.title}>{this.state.title}</Typography>
+            <Typography component="h1" variant="h6" id="GlobalHeader" color="inherit" noWrap className={this.state.classes.title}>{this.state.title}</Typography>
             
           </Toolbar>
         </AppBar>
@@ -240,25 +256,47 @@ class Header extends React.Component {
           >
             <List style={{ width: '100%' }}>
               
-              <ListItem button>
+              <ListItem button onClick={this.goTo.bind(this, 'Список заказов')}>
                 <Link to={"/list_orders"}>
                   <ListItemText primary={ 'Список заказов' } />
                 </Link>
               </ListItem>
-              <ListItem button>
+              <ListItem button onClick={this.goTo.bind(this, 'Карта заказов')}>
                 <Link to={"/map_orders"}>
                   <ListItemText primary={ 'Карта заказов' } />
                 </Link>
               </ListItem>
-              <ListItem button>
+              <ListItem button onClick={this.goTo.bind(this, 'Расчет')}>
                 <Link to={"/price"}>
                   <ListItemText primary={ 'Расчет' } />
                 </Link>
               </ListItem>
-              <ListItem button>
-                <Link to={"/map_orders"}>
+              <ListItem button onClick={this.goTo.bind(this, 'График работы')}>
+                <Link to={"/graph"}>
                   <ListItemText primary={ 'График работы' } />
                 </Link>
+              </ListItem>
+              
+              
+              <ListItem button>
+                <a href={"tel:"+this.state.phone_dir}>
+                  <ListItemText primary={ 'Директор' } />
+                </a>
+              </ListItem>
+              <ListItem button>
+                <a href={"tel:"+this.state.phone_man}>
+                  <ListItemText primary={ 'Менеджер' } />
+                </a>
+              </ListItem>
+              <ListItem button>
+                <a href={"tel:"+this.state.phone_center}>
+                  <ListItemText primary={ 'Контакт-центр' } />
+                </a>
+              </ListItem>
+              
+              
+              <ListItem button onClick={this.logOut.bind(this)}>
+                <ListItemText primary={ 'Выйти' } />
               </ListItem>
               
             </List>

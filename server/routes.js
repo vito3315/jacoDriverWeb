@@ -1,11 +1,10 @@
-const { Home } = require( '../src/components/home' );
 const { Auth } = require( '../src/components/auth' );
 const { Reg } = require( '../src/components/registration' );
 
 const { ListOrders } = require( '../src/components/list_orders' );
 const { MapOrders } = require( '../src/components/map_orders' );
 const { Price } = require( '../src/components/price' );
-
+const { Graph } = require( '../src/components/graph' );
 
 module.exports = [
     {
@@ -42,6 +41,13 @@ module.exports = [
         exact: true,
         component: Price,
         title: 'Расчет',
+        code: 200
+    },
+    {
+        path: '/graph',
+        exact: true,
+        component: Graph,
+        title: 'График работы',
         code: 200
     },
     

@@ -87,7 +87,7 @@ class Reg_ extends React.Component {
       dialogText: '',
       
       activeStep: 0,
-      steps: ['Телефон', 'Подтверждение', 'Новый пароль'],
+      steps: ['Телефон', 'Подтверждение'],
       
       phone: '',
       code: '',
@@ -105,30 +105,15 @@ class Reg_ extends React.Component {
       is_load: true
     })
     
-    return fetch('https://jacochef.ru/api/index_new.php', {
+    return fetch('https://jacochef.ru/api/site/driver.php', {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
       body: queryString.stringify({
-        method: method, 
-        module: this.state.module,
-        version: 2,
-        login: '+79879340391',
-        //login: localStorage.getItem('login'),
+        type: method, 
         data: JSON.stringify( data )
       })
     }).then(res => res.json()).then(json => {
-      
-      if( json.st === false && json.type == 'redir' ){
-        this.state.history.push("/");
-        return;
-      }
-      
-      if( json.st === false && json.type == 'auth' ){
-        this.state.history.push("/auth");
-        return;
-      }
-      
       setTimeout( () => {
         this.setState({
           is_load: false
@@ -159,71 +144,49 @@ class Reg_ extends React.Component {
   
   async nextStep(){
     if( this.state.activeStep == 0 ){
+      
       let data = {
-        login: document.getElementById('phone').value
-      }
+        login: document.getElementById('phone').value,
+        pwd: document.getElementById('password').value,
+      };
       
-      let res = await this.getData('check_phone', data);
+      let res = await this.getData('get_sms', data);
       
-      if( res.st === false ){
-        setTimeout( () => {
-          this.setState({ 
-            modalDialog: true,
-            dialogTitle: 'Предупреждение',
-            dialogText: res.text
-          })
-        }, 500 )
-      }else{
+      if( res['st'] == false ){
         this.setState({ 
+          modalDialog: true,
+          dialogTitle: 'Предупреждение',
+          dialogText: res.text
+        })
+      }else{
+        this.setState({
           activeStep: this.state.activeStep+1,
-          phone: data.login
+          phone: data.login,
+          pwd: data.pwd
         })
       }
+    
     }else if( this.state.activeStep == 1 ){
+      
       let data = {
         login: this.state.phone,
-			  code: document.getElementById('code').value
-      }
+        pwd: this.state.pwd,
+        code: document.getElementById('code').value,
+      };
       
-      let res = await this.getData('check_code', data);
+      let res = await this.getData('send_code', data);
       
-      if( res.st === false ){
-        setTimeout( () => {
-          this.setState({ 
-            modalDialog: true,
-            dialogTitle: 'Предупреждение',
-            dialogText: res.text
-          })
-        }, 500 )
-      }else{
+      if( res['st'] == false ){
         this.setState({ 
-          activeStep: this.state.activeStep+1,
-          code: data.code
+          modalDialog: true,
+          dialogTitle: 'Предупреждение',
+          dialogText: res.text
         })
-      }
-    }else if( this.state.activeStep == 2 ){
-      let data = {
-        login: this.state.phone,
-        code: this.state.code,
-        pwd: document.getElementById('password').value
-      }
-      
-      let res = await this.getData('save_new_pwd', data);
-      
-      if( res.st === false ){
-        setTimeout( () => {
-          this.setState({ 
-            modalDialog: true,
-            dialogTitle: 'Предупреждение',
-            dialogText: res.text
-          })
-        }, 500 )
       }else{
-        localStorage.setItem('token', res.token)
-      
-        setTimeout( () => {
-          window.location.pathname = '/'
-        }, 300)
+        localStorage.setItem('token', res['token'])
+        
+        this.state.history.push("/list_orders");
+        location.reload();
       }
     }
   }
@@ -259,7 +222,7 @@ class Reg_ extends React.Component {
         <Grid container spacing={3} direction="row" justifyContent="center" alignItems="center">
           <Grid item xs={12} sm={6} md={6} lg={4} xl={3}>
             <div className={this.state.classes.paper}>
-              <Avatar className={this.state.classes.avatar}>
+              <Avatar className={this.state.classes.avatar} style={{ marginBottom: 10 }}>
                 <img alt="Жако доставка роллов и пиццы" src="../assets/img_other/Favikon.png" style={{ height: '100%' }} />
               </Avatar>
               
@@ -273,19 +236,35 @@ class Reg_ extends React.Component {
               <div className={this.state.classes.form} style={{ width: '100%' }}>
                 
                 { this.state.activeStep == 0 ?
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    size="small"
-                    required
-                    fullWidth
-                    id="phone"
-                    label="Номер телефона"
-                    name="phone"
-                    autoComplete="phone"
-                    autoFocus
-                    onKeyPress={ this.enterNextStep.bind(this) }
-                  />  
+                  <>
+                    <TextField
+                      variant="outlined"
+                      margin="normal"
+                      size="small"
+                      required
+                      fullWidth
+                      id="phone"
+                      label="Номер телефона"
+                      name="phone"
+                      autoComplete="phone"
+                      autoFocus
+                      //onKeyPress={ this.enterNextStep.bind(this) }
+                    />  
+                    
+                    <TextField
+                      variant="outlined"
+                      margin="normal"
+                      size="small"
+                      required
+                      fullWidth
+                      name="password"
+                      label="Новый пароль"
+                      type="password"
+                      id="password"
+                      autoComplete="current-password"
+                      //onKeyPress={ this.enterNextStep.bind(this) }
+                    />
+                   </>
                     :
                   null
                 }
@@ -302,7 +281,7 @@ class Reg_ extends React.Component {
                     name="code"
                     autoComplete="code"
                     autoFocus
-                    onKeyPress={ this.enterNextStep.bind(this) }
+                    //onKeyPress={ this.enterNextStep.bind(this) }
                   />  
                     :
                   null
@@ -335,7 +314,7 @@ class Reg_ extends React.Component {
                 >
                   Дальше
                 </Button>
-                <Grid container>
+                <Grid container style={{ marginTop: 10 }}>
                   <Grid item xs>
                     <a href="/auth" className={this.state.classes.textLink}>Вернуться к авторизации</a>
                   </Grid>
