@@ -330,35 +330,6 @@ class MapOrders_ extends React.Component {
   }
   
   render(){
-    
-    /*<YMaps>
-              <Map style={{ width: window.screen.width+60, height: window.screen.height-40 }} defaultState={{ center: [this.state.home.latitude, this.state.home.longitude], zoom: 11 }}>
-                
-                <TrafficControl options={{ position: {
-                  top: 60
-                }  }} />
-                <ZoomControl options={{ float: 'right' }} />
-                
-                <Placemark 
-                  geometry={[this.state.home.latitude, this.state.home.longitude]} 
-                  options={{ preset: 'islands#blackDotIcon', iconColor: 'black' }} />
-                
-                {this.state.orders.map( (item, key) =>
-                  <Placemark 
-                    key={key} 
-                    onClick={this.showOrder.bind(this, item)}
-                    geometry={[item.xy.latitude, item.xy.longitude]} 
-                    properties={{ 
-                      iconCaption: parseInt(item.is_pred) == 1 ? item.need_time : ''
-                    }} 
-                    options={{ 
-                      preset: 'islands#circleDotIcon', 
-                      iconColor: parseInt(item.is_get) == 0 ? parseInt(item.status_order) > 1 ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
-                    }} />  
-                )}
-              </Map>
-            </YMaps>*/
-    
     return (
       <>
         <Backdrop open={this.state.is_load}>
@@ -398,7 +369,7 @@ class MapOrders_ extends React.Component {
         <Grid style={{zIndex: 9, margin: -16}}>
           
           
-          <div id="map" name="map" style={{ width: window.screen.width+60, height: window.screen.height-40 }} />
+          <div id="map" name="map" style={{ width: '100%', height: '100%' }} />
                     
           
         </Grid>
