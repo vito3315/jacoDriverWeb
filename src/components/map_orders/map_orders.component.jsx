@@ -201,26 +201,26 @@ class MapOrders_ extends React.Component {
           });
         }else{
           
-          //дом
-          let myGeoObject = new ymaps.GeoObject({
-            geometry: {
-              type: "Point",
-              coordinates: [res.home.latitude, res.home.longitude]
-            },
-          }, {
-            preset: 'islands#blackDotIcon', 
-            iconColor: 'black'
-          })
-          
-          this.map.geoObjects.add(myGeoObject);
-          
-          
-          
           let json = {
             "type": "FeatureCollection",
             "features": []
           };
                   
+          
+          json.features.push({
+            type: "Feature",
+            id: 0,
+            options: {
+              preset: 'islands#blackDotIcon', 
+              iconColor: 'black'
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [res.home.latitude, res.home.longitude]
+            },
+          })
+          
+          
           res.orders.map( function(item){
             
             json.features.push({
