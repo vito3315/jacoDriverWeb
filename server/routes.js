@@ -8,6 +8,13 @@ const { Graph } = require( '../src/components/graph' );
 
 module.exports = [
     {
+        path: '/',
+        exact: true,
+        component: Auth,
+        title: 'Авторизация',
+        code: 200
+    },
+    {
         path: '/auth',
         exact: true,
         component: Auth,

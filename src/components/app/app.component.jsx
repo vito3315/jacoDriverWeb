@@ -154,7 +154,7 @@ class Header extends React.Component {
     
     let thisUri = window.location.pathname;
     
-    if( thisUri == '/' || thisUri == '' ){
+    if( /*thisUri == '/' || thisUri == ''*/ false ){
       this.state.history.push("/list_orders");
       window.location.reload();
     }else{
