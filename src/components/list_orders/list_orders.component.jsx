@@ -243,8 +243,13 @@ class ListOrders_ extends React.Component {
   async componentDidMount(){
     this._isMounted = true;
     
+    console.log( window.location.protocol )
+    
     if(window.location.protocol == 'http:' || window.location.protocol == 'http'){
-      window.location.protocol = 'https:';
+      
+      console.log( 'goTo', 'https://jacodriver.ru/'+window.location.pathname )
+      
+      window.location.href = 'https://jacodriver.ru/'+window.location.pathname;
     }
     
     if( localStorage.getItem('token') && localStorage.getItem('token').length > 0 ){
