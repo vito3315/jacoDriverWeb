@@ -243,6 +243,10 @@ class ListOrders_ extends React.Component {
   async componentDidMount(){
     this._isMounted = true;
     
+    if(window.location.protocol == 'http:' || window.location.protocol == 'http'){
+      window.location.protocol = 'https:';
+    }
+    
     if( localStorage.getItem('token') && localStorage.getItem('token').length > 0 ){
       
     }else{
