@@ -96,7 +96,14 @@ class Reg_ extends React.Component {
   }
   
   async componentDidMount(){
+    console.log( window.location.protocol )
+    
+    if(window.location.protocol == 'http:' || window.location.protocol == 'http'){
       
+      console.log( 'goTo', 'https://jacodriver.ru/'+window.location.pathname )
+      
+      window.location.href = 'https://jacodriver.ru/'+window.location.pathname;
+    }
   }
   
   getData = (method, data = {}) => {
