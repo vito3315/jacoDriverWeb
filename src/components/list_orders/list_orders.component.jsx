@@ -222,14 +222,12 @@ class ListOrders_ extends React.Component {
       
       is_open: false,
       
-      type: { id: -1, text: 'Все заказы' },
+      type: { id: 1, text: 'Активные' },
       
       types: [
-        { id: -1, text: 'Все заказы' },
-        { id: 1, text: 'Отмеченные' },
-        { id: 2, text: 'Свободные' },
-        { id: 3, text: 'В очереди' },
-        { id: 4, text: 'Мои завешенные' },
+        { id: 1, text: 'Активные' }, //готовятся и готовы
+        { id: 3, text: 'Предзаказы' }, //более часа
+        { id: 2, text: 'Мои отмеченные' }, //мои
         { id: 5, text: 'У других курьеров' }, 
       ],
     };
@@ -243,9 +241,7 @@ class ListOrders_ extends React.Component {
   async componentDidMount(){
     this._isMounted = true;
     
-    console.log( window.location.protocol )
-    
-    if(window.location.protocol == 'http:' || window.location.protocol == 'http'){
+    if((window.location.protocol == 'http:' || window.location.protocol == 'http') && window.location.hostname != 'localhost'){
       
       console.log( 'goTo', 'https://jacodriver.ru/'+window.location.pathname )
       
@@ -305,7 +301,7 @@ class ListOrders_ extends React.Component {
     });
   }
   
-  async getOrders(is_load = true, type = -1){
+  async getOrders(is_load = true, type = 1){
     if( is_load ){
       this.setState({
         is_load: true,
@@ -324,14 +320,36 @@ class ListOrders_ extends React.Component {
       type: type
     };
     
-    let res = await this.getData('get_orders_new', data);
+    let res = await this.getData('get_orders_new_new', data);
     
     if( res === false ){
       
     }else{
       setTimeout( () => {
+        let orders = [];
+        
+        //активные
+        if( type == 1 ){
+          orders = res.free_orders;
+        }
+        
+        //Мои отмеченные
+        if( type == 2 ){
+          orders = res.my_orders;
+        }
+        
+        //У других курьеров
+        if( type == 5 ){
+          orders = res.other_orders;
+        }
+        
+        //преды
+        if( type == 3 ){
+          orders = res.pred_orders;
+        }
+        
         this.setState({
-          orders: res.orders,
+          orders: orders,
           is_load: false
         })
       }, 1000 )

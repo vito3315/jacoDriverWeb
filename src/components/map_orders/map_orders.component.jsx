@@ -35,14 +35,11 @@ class MapOrders_ extends React.Component {
       is_open_order: false,
       openOrder: null,
       
-      type: { id: -1, text: 'Все заказы' },
+      type: { id: 1, text: 'Активные' },
       
       types: [
-        { id: -1, text: 'Все заказы' },
-        { id: 1, text: 'Отмеченные' },
-        { id: 2, text: 'Свободные' },
-        { id: 3, text: 'В очереди' },
-        { id: 4, text: 'Мои завешенные' },
+        { id: 1, text: 'Активные' }, //готовятся и готовы
+        { id: 2, text: 'Мои отмеченные' }, //мои
         { id: 5, text: 'У других курьеров' }, 
       ],
     };
@@ -58,7 +55,7 @@ class MapOrders_ extends React.Component {
     
     console.log( window.location.protocol )
     
-    if(window.location.protocol == 'http:' || window.location.protocol == 'http'){
+    if((window.location.protocol == 'http:' || window.location.protocol == 'http') && window.location.hostname != 'localhost'){
       
       console.log( 'goTo', 'https://jacodriver.ru/'+window.location.pathname )
       
@@ -120,7 +117,7 @@ class MapOrders_ extends React.Component {
     });
   }
   
-  async getOrders(is_load = true, type = -1){
+  async getOrders(is_load = true, type = 1){
     if( is_load ){
       this.setState({
         is_load: true,
@@ -139,14 +136,31 @@ class MapOrders_ extends React.Component {
       type: type
     };
     
-    let res = await this.getData('get_orders_new', data);
+    let res = await this.getData('get_orders_new_new', data);
     
     if( res === false ){
       
     }else{
       setTimeout( () => {
+        let orders = [];
+        
+        //активные
+        if( type == 1 ){
+          orders = res.free_orders;
+        }
+        
+        //Мои отмеченные
+        if( type == 2 ){
+          orders = res.my_orders;
+        }
+        
+        //У других курьеров
+        if( type == 5 ){
+          orders = res.other_orders;
+        }
+        
         this.setState({
-          orders: res.orders,
+          orders: orders,
           home: res.home,
           is_load: false
         })
@@ -183,17 +197,19 @@ class MapOrders_ extends React.Component {
               "features": []
             };
                     
-            res.orders.map( function(item){
-              
+            orders.map( function(item){
+            
               json.features.push({
                 type: "Feature",
                 id: item.id,
                 options: {
-                  preset: 'islands#circleDotIcon', 
-                  iconColor: parseInt(item.is_get) == 0 ? parseInt(item.status_order) > 1 ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
+                  preset: parseInt(item.status_order) == 6 ? 'islands#blueCircleDotIconWithCaption' : 'islands#circleIcon', 
+                  iconColor: parseInt(item.is_get) == 0 ? (parseInt(item.status_order) == 4 || parseInt(item.status_order) == 5) ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
                 },
                 properties: {
-                  iconCaption: parseInt(item.is_pred) == 1 ? item.need_time : ''
+                  iconContent: parseInt(item.status_order) == 6 ? item.close_time_ : parseInt(item.is_pred) == 1 ? item.need_time : '',
+                  iconCaption: parseInt(item.status_order) == 6 ? item.close_time_ : parseInt(item.is_pred) == 1 ? item.need_time : '',
+                  iconColor: parseInt(item.is_get) == 0 ? (parseInt(item.status_order) == 4 || parseInt(item.status_order) == 5) ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
                 },
                 geometry: {
                   type: "Point",
@@ -215,7 +231,7 @@ class MapOrders_ extends React.Component {
             "features": []
           };
                   
-          
+          //дом
           json.features.push({
             type: "Feature",
             id: 0,
@@ -230,17 +246,19 @@ class MapOrders_ extends React.Component {
           })
           
           
-          res.orders.map( function(item){
+          orders.map( function(item){
             
             json.features.push({
               type: "Feature",
               id: item.id,
               options: {
-                preset: 'islands#circleDotIcon', 
-                iconColor: parseInt(item.is_get) == 0 ? parseInt(item.status_order) > 1 ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
+                preset: parseInt(item.status_order) == 6 ? 'islands#blueCircleDotIconWithCaption' : 'islands#circleIcon', 
+                iconColor: parseInt(item.is_get) == 0 ? (parseInt(item.status_order) == 4 || parseInt(item.status_order) == 5) ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
               },
               properties: {
-                iconCaption: parseInt(item.is_pred) == 1 ? item.need_time : ''
+                iconContent: parseInt(item.status_order) == 6 ? item.close_time_ : parseInt(item.is_pred) == 1 ? item.need_time : '',
+                iconCaption: parseInt(item.status_order) == 6 ? item.close_time_ : parseInt(item.is_pred) == 1 ? item.need_time : '',
+                iconColor: parseInt(item.is_get) == 0 ? (parseInt(item.status_order) == 4 || parseInt(item.status_order) == 5) ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
               },
               geometry: {
                 type: "Point",
