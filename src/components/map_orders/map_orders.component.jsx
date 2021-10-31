@@ -53,12 +53,7 @@ class MapOrders_ extends React.Component {
   async componentDidMount(){
     this._isMounted = true;
     
-    console.log( window.location.protocol )
-    
     if((window.location.protocol == 'http:' || window.location.protocol == 'http') && window.location.hostname != 'localhost'){
-      
-      console.log( 'goTo', 'https://jacodriver.ru/'+window.location.pathname )
-      
       window.location.href = 'https://jacodriver.ru/'+window.location.pathname;
     }
     
@@ -85,7 +80,9 @@ class MapOrders_ extends React.Component {
       console.log(message) // при отказе в доступе получаем PositionError: User denied Geolocation
     }
     
-    //document.title = data.module_info.name;
+    //if( this._isMounted ){
+      this.getOrders(false, 1);
+    //}
     
     this.timerId = setInterval(() => {
       if( this._isMounted ){
@@ -137,6 +134,8 @@ class MapOrders_ extends React.Component {
     };
     
     let res = await this.getData('get_orders_new_new', data);
+    
+    console.log( res.home )
     
     if( res === false ){
       

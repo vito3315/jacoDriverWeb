@@ -188,11 +188,15 @@ export class CardItemList extends PureComponent{
             <div style={{ display: 'flex', flexDirection: 'column', width: width, alignItems: 'center', justifyContent: 'center', paddingTop: 10 }}>
               
               <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: width }}>
-                <Button className='bntAction typeItemsRed' style={{ width: '40%', marginRight: 5 }} onClick={this.cancelOrder.bind(this, item.id)}>Отменить</Button>
-                <a className='bntAction' style={{ width: '60%', marginLeft: 5, backgroundColor: '#bababa' }} href={"tel:"+item.number}>{item.number}</a>
+                { parseInt(item.status_order) != 6 ? null :
+                  <Button className='bntAction typeItemsRed' style={{ width: '40%', marginRight: 5 }} onClick={this.cancelOrder.bind(this, item.id)}>Отменить</Button>
+                }
+                <a className='bntAction' style={{ width: parseInt(item.status_order) != 6 ? '60%' : '100%', marginLeft: 5, backgroundColor: '#bababa' }} href={"tel:"+item.number}>{item.number}</a>
               </div>
               
-              <Button className='bntAction typeItemsGreen' style={{ width: width, marginTop: 10 }} onClick={this.finishOrder.bind(this, item.id)}>Завершить</Button>
+              { parseInt(item.status_order) != 6 ? null :
+                <Button className='bntAction typeItemsGreen' style={{ width: width, marginTop: 10 }} onClick={this.finishOrder.bind(this, item.id)}>Завершить</Button>
+              }
             </div>
               :
             <div style={{ display: 'flex', flexDirection: 'row', marginLeft: 0, width: width, alignItems: 'center', justifyContent: 'center', paddingTop: 10 }}>
@@ -229,6 +233,7 @@ class ListOrders_ extends React.Component {
         { id: 3, text: 'Предзаказы' }, //более часа
         { id: 2, text: 'Мои отмеченные' }, //мои
         { id: 5, text: 'У других курьеров' }, 
+        { id: 6, text: 'Мои завершенные' }, //мои завершенеы
       ],
     };
   }
@@ -346,6 +351,11 @@ class ListOrders_ extends React.Component {
         //преды
         if( type == 3 ){
           orders = res.pred_orders;
+        }
+        
+        //мои завершенные
+        if( type == 6 ){
+          orders = res.my_finish;
         }
         
         this.setState({
