@@ -346,7 +346,7 @@ export function App () {
     const classes = useStyles();
     let history = useHistory();
     
-    console.log( history.location.protocol )
+    console.log( history.location )
     
     if(history.location.protocol == 'http:' || history.location.protocol == 'http'){
       
