@@ -346,13 +346,13 @@ export function App () {
     const classes = useStyles();
     let history = useHistory();
     
-    console.log( window.location.protocol )
+    console.log( history.location.protocol )
     
-    if(window.location.protocol == 'http:' || window.location.protocol == 'http'){
+    if(history.location.protocol == 'http:' || history.location.protocol == 'http'){
       
-      console.log( 'goTo', 'https://jacodriver.ru/'+window.location.pathname )
+      console.log( 'goTo', 'https://jacodriver.ru/'+history.location.pathname )
       
-      window.location.href = 'https://jacodriver.ru/'+window.location.pathname;
+      history.location.href = 'https://jacodriver.ru/'+history.location.pathname;
     }
     
     let check_header = true;
