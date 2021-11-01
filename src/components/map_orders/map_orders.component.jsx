@@ -202,13 +202,13 @@ class MapOrders_ extends React.Component {
                 type: "Feature",
                 id: item.id,
                 options: {
-                  preset: parseInt(item.status_order) == 6 ? 'islands#blueCircleDotIconWithCaption' : 'islands#circleIcon', 
+                  preset: parseInt(item.status_order) == 6 ? 'islands#blueCircleDotIconWithCaption' : 'islands#circleDotIcon', 
                   iconColor: parseInt(item.is_get) == 0 ? (parseInt(item.status_order) == 4 || parseInt(item.status_order) == 5) ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
                 },
                 properties: {
-                  iconContent: parseInt(item.status_order) == 6 ? item.close_time_ : parseInt(item.is_pred) == 1 ? item.need_time : '',
+                  //iconContent: parseInt(item.status_order) == 6 ? item.close_time_ : parseInt(item.is_pred) == 1 ? item.need_time : '',
                   iconCaption: parseInt(item.status_order) == 6 ? item.close_time_ : parseInt(item.is_pred) == 1 ? item.need_time : '',
-                  iconColor: parseInt(item.is_get) == 0 ? (parseInt(item.status_order) == 4 || parseInt(item.status_order) == 5) ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
+                  //iconColor: parseInt(item.is_get) == 0 ? (parseInt(item.status_order) == 4 || parseInt(item.status_order) == 5) ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
                 },
                 geometry: {
                   type: "Point",
@@ -251,13 +251,13 @@ class MapOrders_ extends React.Component {
               type: "Feature",
               id: item.id,
               options: {
-                preset: parseInt(item.status_order) == 6 ? 'islands#blueCircleDotIconWithCaption' : 'islands#circleIcon', 
+                preset: parseInt(item.status_order) == 6 ? 'islands#blueCircleDotIconWithCaption' : 'islands#circleDotIcon', 
                 iconColor: parseInt(item.is_get) == 0 ? (parseInt(item.status_order) == 4 || parseInt(item.status_order) == 5) ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
               },
               properties: {
-                iconContent: parseInt(item.status_order) == 6 ? item.close_time_ : parseInt(item.is_pred) == 1 ? item.need_time : '',
+                //iconContent: parseInt(item.status_order) == 6 ? item.close_time_ : parseInt(item.is_pred) == 1 ? item.need_time : '',
                 iconCaption: parseInt(item.status_order) == 6 ? item.close_time_ : parseInt(item.is_pred) == 1 ? item.need_time : '',
-                iconColor: parseInt(item.is_get) == 0 ? (parseInt(item.status_order) == 4 || parseInt(item.status_order) == 5) ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
+                //iconColor: parseInt(item.is_get) == 0 ? (parseInt(item.status_order) == 4 || parseInt(item.status_order) == 5) ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
               },
               geometry: {
                 type: "Point",

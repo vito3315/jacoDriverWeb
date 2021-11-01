@@ -188,13 +188,13 @@ export class CardItemList extends PureComponent{
             <div style={{ display: 'flex', flexDirection: 'column', width: width, alignItems: 'center', justifyContent: 'center', paddingTop: 10 }}>
               
               <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: width }}>
-                { parseInt(item.status_order) != 6 ? null :
+                { parseInt(item.status_order) == 6 ? null :
                   <Button className='bntAction typeItemsRed' style={{ width: '40%', marginRight: 5 }} onClick={this.cancelOrder.bind(this, item.id)}>Отменить</Button>
                 }
                 <a className='bntAction' style={{ width: parseInt(item.status_order) != 6 ? '60%' : '100%', marginLeft: 5, backgroundColor: '#bababa' }} href={"tel:"+item.number}>{item.number}</a>
               </div>
               
-              { parseInt(item.status_order) != 6 ? null :
+              { parseInt(item.status_order) == 6 ? null :
                 <Button className='bntAction typeItemsGreen' style={{ width: width, marginTop: 10 }} onClick={this.finishOrder.bind(this, item.id)}>Завершить</Button>
               }
             </div>
