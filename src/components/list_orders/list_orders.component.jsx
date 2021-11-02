@@ -199,8 +199,9 @@ export class CardItemList extends PureComponent{
               }
             </div>
               :
-            <div style={{ display: 'flex', flexDirection: 'row', marginLeft: 0, width: width, alignItems: 'center', justifyContent: 'center', paddingTop: 10 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', marginLeft: 0, width: width, alignItems: 'center', justifyContent: 'center', paddingTop: 10 }}>
               <Button className='bntAction typeItemsGray' style={{ width: '100%', textAlign: 'center' }}>{item.driver_name}</Button>
+              <a className='bntAction typeItemsGray' style={{ width: '100%', textAlign: 'center', marginTop: 10, color: '#000' }} href={"tel:"+item.driver_login}>{item.driver_login}</a>
             </div>
         }
         

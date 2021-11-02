@@ -203,12 +203,11 @@ class MapOrders_ extends React.Component {
                 id: item.id,
                 options: {
                   preset: parseInt(item.status_order) == 6 ? 'islands#blueCircleDotIconWithCaption' : 'islands#circleDotIcon', 
-                  iconColor: parseInt(item.is_get) == 0 ? (parseInt(item.status_order) == 4 || parseInt(item.status_order) == 5) ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
+                  iconColor: item.point_color ? item.point_color : item.color
                 },
                 properties: {
-                  //iconContent: parseInt(item.status_order) == 6 ? item.close_time_ : parseInt(item.is_pred) == 1 ? item.need_time : '',
-                  iconCaption: parseInt(item.status_order) == 6 ? item.close_time_ : parseInt(item.is_pred) == 1 ? item.need_time : '',
-                  //iconColor: parseInt(item.is_get) == 0 ? (parseInt(item.status_order) == 4 || parseInt(item.status_order) == 5) ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
+                  iconCaption: item.point_text,
+                  //iconCaption: parseInt(item.status_order) == 6 ? item.close_time_ : parseInt(item.is_pred) == 1 ? item.need_time : parseInt(item.is_my) == 1 ? item.time_start_mini : '',
                 },
                 geometry: {
                   type: "Point",
@@ -252,12 +251,11 @@ class MapOrders_ extends React.Component {
               id: item.id,
               options: {
                 preset: parseInt(item.status_order) == 6 ? 'islands#blueCircleDotIconWithCaption' : 'islands#circleDotIcon', 
-                iconColor: parseInt(item.is_get) == 0 ? (parseInt(item.status_order) == 4 || parseInt(item.status_order) == 5) ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
+                iconColor: item.point_color ? item.point_color : item.color
               },
               properties: {
-                //iconContent: parseInt(item.status_order) == 6 ? item.close_time_ : parseInt(item.is_pred) == 1 ? item.need_time : '',
-                iconCaption: parseInt(item.status_order) == 6 ? item.close_time_ : parseInt(item.is_pred) == 1 ? item.need_time : '',
-                //iconColor: parseInt(item.is_get) == 0 ? (parseInt(item.status_order) == 4 || parseInt(item.status_order) == 5) ? '#3caa3c' : '#bababa' : parseInt(item.is_my) == 1 ? '#2c75ff' : item.color
+                iconCaption: item.point_text,
+                //iconCaption: parseInt(item.status_order) == 6 ? item.close_time_ : parseInt(item.is_pred) == 1 ? item.need_time : parseInt(item.is_my) == 1 ? item.time_start_mini : '',
               },
               geometry: {
                 type: "Point",
@@ -279,7 +277,9 @@ class MapOrders_ extends React.Component {
           let order_id = e.get('objectId');
           let order = this.state.orders.find( (item) => parseInt(item.id) == parseInt(order_id) );
           
-          this.showOrder(order);
+          if( order ){
+            this.showOrder(order);
+          }
         });
         
       }, 1000 )
