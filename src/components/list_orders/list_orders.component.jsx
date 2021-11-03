@@ -147,6 +147,13 @@ export class CardItemList extends PureComponent{
             <Typography className='text'>{item.need_time}</Typography>  
           </div>
           
+          { parseInt(item.status_order) !== 1 ? null :
+            <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+              <Typography className='textBold' style={{ paddingRight: 5 }}>Начнут готовить: </Typography>
+              <Typography className='text'>{item.time_start_order}</Typography>
+            </div>
+          }
+          
           <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
             <Typography className='textBold' style={{ paddingRight: 5 }}>Осталось: </Typography>
             <Typography className='text'>{item.to_time}</Typography>
