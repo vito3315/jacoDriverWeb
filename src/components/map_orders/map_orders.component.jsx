@@ -278,9 +278,6 @@ class MapOrders_ extends React.Component {
           
         }
         
-        this.map.getMap().setRotateGesturesEnabled(false)
-        //this.map.setRotateGesturesEnabled( false )
-        
         objectManager.objects.events.add(['click'], (e) => {
           let order_id = e.get('objectId');
           let order = this.state.orders.find( (item) => parseInt(item.id) == parseInt(order_id) );
@@ -368,18 +365,6 @@ class MapOrders_ extends React.Component {
     })
   }
   
-  rotate(){
-    let this_rotate = this.state.rotate;
-    
-    this.setState({
-      rotate: !this_rotate
-    })
-    
-    console.log( this.map )
-    
-    //this.map.setRotateGesturesEnabled( !this_rotate )
-  }
-  
   render(){
     return (
       <>
@@ -388,9 +373,7 @@ class MapOrders_ extends React.Component {
         </Backdrop>
         
         <div style={{ position: 'absolute', zIndex: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', left: 0, top: 100 }}>
-          <Button style={{ marginLeft: 38 }} onClick={ this.rotate.bind(this) }> {this.state.rotate ? <ScreenRotationIcon /> : <ScreenLockRotationIcon />} </Button>
-          
-          <Button style={{ color: this.state.type.id == 1 ? '#2c75ff' : '#000', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 1) }>Активные</Button>
+          <Button style={{ marginLeft: 38, color: this.state.type.id == 1 ? '#2c75ff' : '#000', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 1) }>Активные</Button>
           <Button style={{ color: this.state.type.id == 2 ? '#2c75ff' : '#000', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 2) }>Мои</Button>
           <Button style={{ color: this.state.type.id == 5 ? '#2c75ff' : '#000', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 5) }>У других</Button>
           
