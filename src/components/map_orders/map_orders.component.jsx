@@ -17,50 +17,6 @@ import ScreenLockRotationIcon from '@mui/icons-material/ScreenLockRotation';
 
 const queryString = require('query-string');
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-//import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyAK8l7m2URB6kFbBzC5iv67W34cuEzPKYc",
-  authDomain: "macro-thinker-288611.firebaseapp.com",
-  databaseURL: "https://macro-thinker-288611.firebaseio.com",
-  projectId: "macro-thinker-288611",
-  storageBucket: "macro-thinker-288611.appspot.com",
-  messagingSenderId: "989415800368",
-  appId: "1:989415800368:web:35373fd752ab60aa3177f5",
-  measurementId: "G-YDT84TR2E2"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-//const analytics = getAnalytics(app);
-
-import { getMessaging, getToken } from "firebase/messaging";
-
-// Get registration token. Initially this makes a network call, once retrieved
-// subsequent calls to getToken will return from cache.
-const messaging = getMessaging();
-getToken(messaging, { vapidKey: 'BJmoVaG5ijS0CXc126Y47xmkjxv92stPrkQDfLql5hirvoWvAcy2N4xR1CPKVnCzUVai3ZqkzvVAjOyHGUWhogA' }).then((currentToken) => {
-  if (currentToken) {
-    console.log('currentToken', currentToken);
-  } else {
-    // Show permission request UI
-    console.log('No registration token available. Request permission to generate one.');
-    // ...
-  }
-}).catch((err) => {
-  console.log('An error occurred while retrieving token. ', err);
-  // ...
-});
-
-console.log( 'app', app )
-console.log( 'analytics', analytics )
-
 class MapOrders_ extends React.Component {
   timerId = null;
   _isMounted = false;
@@ -322,6 +278,9 @@ class MapOrders_ extends React.Component {
           
         }
         
+        this.map.getMap().setRotateGesturesEnabled(false)
+        //this.map.setRotateGesturesEnabled( false )
+        
         objectManager.objects.events.add(['click'], (e) => {
           let order_id = e.get('objectId');
           let order = this.state.orders.find( (item) => parseInt(item.id) == parseInt(order_id) );
@@ -409,6 +368,18 @@ class MapOrders_ extends React.Component {
     })
   }
   
+  rotate(){
+    let this_rotate = this.state.rotate;
+    
+    this.setState({
+      rotate: !this_rotate
+    })
+    
+    console.log( this.map )
+    
+    //this.map.setRotateGesturesEnabled( !this_rotate )
+  }
+  
   render(){
     return (
       <>
@@ -417,7 +388,9 @@ class MapOrders_ extends React.Component {
         </Backdrop>
         
         <div style={{ position: 'absolute', zIndex: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', left: 0, top: 100 }}>
-          <Button style={{ marginLeft: 38, color: this.state.type.id == 1 ? '#2c75ff' : '#000', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 1) }>Активные</Button>
+          <Button style={{ marginLeft: 38 }} onClick={ this.rotate.bind(this) }> {this.state.rotate ? <ScreenRotationIcon /> : <ScreenLockRotationIcon />} </Button>
+          
+          <Button style={{ color: this.state.type.id == 1 ? '#2c75ff' : '#000', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 1) }>Активные</Button>
           <Button style={{ color: this.state.type.id == 2 ? '#2c75ff' : '#000', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 2) }>Мои</Button>
           <Button style={{ color: this.state.type.id == 5 ? '#2c75ff' : '#000', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 5) }>У других</Button>
           
