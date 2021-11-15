@@ -154,10 +154,19 @@ export class CardItemList extends PureComponent{
             </div>
           }
           
-          <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-            <Typography className='textBold' style={{ paddingRight: 5 }}>Осталось: </Typography>
-            <Typography className='text'>{item.to_time}</Typography>
-          </div>
+          { parseInt(item.status_order) !== 6 ? null :
+            <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+              <Typography className='textBold' style={{ paddingRight: 5 }}>Отдали: </Typography>
+              <Typography className='text'>{item.close_date_time_order}</Typography>
+            </div>
+          }
+          
+          { parseInt(item.status_order) == 6 ? null :
+            <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+              <Typography className='textBold' style={{ paddingRight: 5 }}>Осталось: </Typography>
+              <Typography className='text'>{item.to_time}</Typography>
+            </div>
+          }
           
         </div>
         
@@ -165,6 +174,13 @@ export class CardItemList extends PureComponent{
           <div style={{ flex: 1, display: 'flex', flexDirection: 'row', flexWrap: 'wrap', paddingBottom: 5, width: width }}>
             <Typography className='textBold' style={{ paddingRight: 5 }}>Коммент: </Typography>
             <Typography className='text'>{item.comment}</Typography>
+          </div>
+        }
+        
+        { parseInt(item.is_delete) == 0 ? null :
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'row', flexWrap: 'wrap', paddingBottom: 5, width: width }}>
+            <Typography className='textBold' style={{ paddingRight: 5 }}>Причина удаления: </Typography>
+            <Typography className='text'>{item.delete_reason}</Typography>
           </div>
         }
         
@@ -330,10 +346,11 @@ class ListOrders_ extends React.Component {
     
     let data = {
       token: localStorage.getItem('token'),
-      type: type
+      type: type,
+      is_map: 0
     };
     
-    let res = await this.getData('get_orders_new_new', data);
+    let res = await this.getData('get_orders_v2', data);
     
     if( res === false ){
       
@@ -380,7 +397,7 @@ class ListOrders_ extends React.Component {
       is_load: true
     })
     
-    if( parseInt(type) == 3 || true ){
+    if( parseInt(type) == 3 ){
       navigator.geolocation.getCurrentPosition(success, error, {
         // высокая точность
         enableHighAccuracy: true
