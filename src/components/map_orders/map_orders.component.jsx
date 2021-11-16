@@ -15,7 +15,28 @@ import CachedIcon from '@mui/icons-material/Cached';
 import ScreenRotationIcon from '@mui/icons-material/ScreenRotation';
 import ScreenLockRotationIcon from '@mui/icons-material/ScreenLockRotation';
 
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getMessaging, getToken } from "firebase/messaging";
+
 const queryString = require('query-string');
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAK8l7m2URB6kFbBzC5iv67W34cuEzPKYc",
+  authDomain: "macro-thinker-288611.firebaseapp.com",
+  databaseURL: "https://macro-thinker-288611.firebaseio.com",
+  projectId: "macro-thinker-288611",
+  storageBucket: "macro-thinker-288611.appspot.com",
+  messagingSenderId: "989415800368",
+  appId: "1:989415800368:web:35373fd752ab60aa3177f5",
+  measurementId: "G-YDT84TR2E2"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+
 
 class MapOrders_ extends React.Component {
   timerId = null;
