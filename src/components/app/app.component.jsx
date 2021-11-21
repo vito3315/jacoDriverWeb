@@ -208,6 +208,7 @@ class Header extends React.Component {
       return json;
     })
     .catch(err => { 
+      alert('Плохая связь с интернетом или ошибка на сервере')
       console.log( err )
     });
   }
@@ -285,6 +286,11 @@ class Header extends React.Component {
               <ListItem button onClick={this.goTo.bind(this, 'График работы')}>
                 <Link to={"/graph"}>
                   <ListItemText primary={ 'График работы' } />
+                </Link>
+              </ListItem>
+              <ListItem button onClick={this.goTo.bind(this, 'Настройки')}>
+                <Link to={"/settings"}>
+                  <ListItemText primary={ 'Настройки' } />
                 </Link>
               </ListItem>
               

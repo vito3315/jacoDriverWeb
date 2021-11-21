@@ -5,6 +5,7 @@ const { ListOrders } = require( '../src/components/list_orders' );
 const { MapOrders } = require( '../src/components/map_orders' );
 const { Price } = require( '../src/components/price' );
 const { Graph } = require( '../src/components/graph' );
+const { Settings } = require( '../src/components/settings' );
 
 module.exports = [
     {
@@ -55,6 +56,13 @@ module.exports = [
         exact: true,
         component: Graph,
         title: 'График работы',
+        code: 200
+    },
+    {
+        path: '/settings',
+        exact: true,
+        component: Settings,
+        title: 'Настройки',
         code: 200
     },
     

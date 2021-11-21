@@ -326,6 +326,7 @@ class ListOrders_ extends React.Component {
       return json;
     })
     .catch(err => { 
+      alert('Плохая связь с интернетом или ошибка на сервере')
       console.log( err )
     });
   }
@@ -350,7 +351,7 @@ class ListOrders_ extends React.Component {
       is_map: 0
     };
     
-    let res = await this.getData('get_orders_v2', data);
+    let res = await this.getData('get_orders_v3', data);
     
     if( res === false ){
       

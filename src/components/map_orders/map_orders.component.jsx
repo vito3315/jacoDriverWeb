@@ -116,6 +116,7 @@ class MapOrders_ extends React.Component {
       return json;
     })
     .catch(err => { 
+      alert('Плохая связь с интернетом или ошибка на сервере')
       console.log( err )
     });
   }
@@ -140,7 +141,7 @@ class MapOrders_ extends React.Component {
       is_map: 1
     };
     
-    let res = await this.getData('get_orders_v2', data);
+    let res = await this.getData('get_orders_v3', data);
     
     console.log( res.home )
     
@@ -299,6 +300,11 @@ class MapOrders_ extends React.Component {
       is_load: true
     })
     
+    this.setState({
+      is_open_order: false,
+      openOrder: null
+    })
+    
     if( parseInt(type) == 3 ){
       navigator.geolocation.getCurrentPosition(success, error, {
         // высокая точность
@@ -351,11 +357,6 @@ class MapOrders_ extends React.Component {
         is_load: false
       })
     }else{
-      this.setState({
-        is_open_order: false,
-        openOrder: null
-      })
-      
       this.getOrders(true, this.state.type.id)
     }
   }

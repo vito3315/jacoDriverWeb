@@ -7,5 +7,7 @@ body{margin:0px !important}p,span,b,th,td,label{font-size:1rem !important}h1,h2,
 
 
 
+.chrome-picker>div:last-child>div:last-child{display:none !important}
+
 
 /*# sourceMappingURL=styles.css.map*/

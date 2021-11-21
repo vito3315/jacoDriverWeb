@@ -17,6 +17,15 @@ import MobileDatePicker from '@mui/lab/MobileDatePicker';
 import Stack from '@mui/material/Stack';
 import ruLocale from "date-fns/locale/ru";
 
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableFooter from '@mui/material/TableFooter';
+
 const queryString = require('query-string');
 
 const theme = createTheme({
@@ -81,18 +90,17 @@ class Price_ extends React.Component {
       bankSum: 0,
       cashSum: 0,
       myPrice: 0,
-      sdacha: 0
+      sdacha: 0,
+      
+      myCash: 0,
+      
+      giveList: [],
+      full_give: 0
     };
   }
   
   async componentDidMount(){
-    
-    console.log( window.location.protocol )
-    
     if((window.location.protocol == 'http:' || window.location.protocol == 'http') && window.location.hostname != 'localhost'){
-      
-      console.log( 'goTo', 'https://jacodriver.ru/'+window.location.pathname )
-      
       window.location.href = 'https://jacodriver.ru/'+window.location.pathname;
     }
     
@@ -112,6 +120,7 @@ class Price_ extends React.Component {
       return json;
     })
     .catch(err => { 
+      alert('Плохая связь с интернетом или ошибка на сервере')
       console.log( err )
     });
   }
@@ -139,9 +148,7 @@ class Price_ extends React.Component {
       date: fullDate
     };
     
-    let res = await this.getData('getMyPrice', data);
-    
-    console.log( 'load res', res )
+    let res = await this.getData('getMyPrice_v2', data);
     
     this.setState({
       allCount: res.count ?? 0,
@@ -150,7 +157,11 @@ class Price_ extends React.Component {
       bankSum: res.sum_bank ?? 0,
       cashSum: res.sum_cash ?? 0,
       myPrice: res.my_price ?? 0,
-      sdacha: res.sdacha ?? 0
+      sdacha: res.sdacha ?? 0,
+      
+      myCash: res.stat.my_cash ?? 0,
+      giveList: res.give_hist ?? [],
+      full_give: res.stat.full_give ?? 0
     })
     
   }
@@ -202,6 +213,11 @@ class Price_ extends React.Component {
               <Typography style={{ fontSize: 20, color: '#000' }} component="span">{this.state.sdacha}р.</Typography>
             </div>
             
+            <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', paddingBottom: 10 }}>
+              <Typography style={{ fontSize: 20, fontWeight: 'bold', color: '#000', paddingRight: 5 }} component="span">Налички:</Typography>
+              <Typography style={{ fontSize: 20, color: '#000' }} component="span">{this.state.myCash}р.</Typography>
+            </div>
+            
             <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
               <Typography style={{ fontSize: 20, fontWeight: 'bold', color: '#000', paddingRight: 5 }} component="span">Количество по налу:</Typography>
               <Typography style={{ fontSize: 20, color: '#000' }} component="span">{this.state.cashCount}</Typography>
@@ -214,11 +230,46 @@ class Price_ extends React.Component {
               <Typography style={{ fontSize: 20, fontWeight: 'bold', color: '#000', paddingRight: 5 }} component="span">Завершенных заказов:</Typography>
               <Typography style={{ fontSize: 20, color: '#000' }} component="span">{this.state.allCount}</Typography>
             </div>
-            
-            
+          
           </Grid>
+        </Grid>
           
-          
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={3} style={{ marginTop: 10 }}>
+            <Paper sx={{ width: '100%' }}>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Время</TableCell>
+                      <TableCell>Сданная сумма</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    { this.state.giveList.map( (rowData, index) =>
+                      <TableRow hover key={index}>
+                        <TableCell>{rowData.time}</TableCell>
+                        <TableCell>{rowData.give} р.</TableCell>
+                      </TableRow>
+                    ) }
+                  </TableBody>
+                  
+                  <TableFooter>
+                    <TableRow>
+                      <TableCell>Итого</TableCell>
+                      <TableCell>{this.state.full_give} р.</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Осталось</TableCell>
+                      <TableCell>{this.state.myCash} р.</TableCell>
+                    </TableRow>
+                  </TableFooter>
+                  
+                </Table>
+              </TableContainer>
+              
+            </Paper>
+          </Grid>
           
         </Grid>
       </>
