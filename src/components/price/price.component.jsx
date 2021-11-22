@@ -151,13 +151,13 @@ class Price_ extends React.Component {
     let res = await this.getData('getMyPrice_v2', data);
     
     this.setState({
-      allCount: res.count ?? 0,
-      bankCount: res.count_bank ?? 0,
-      cashCount: res.count_cash ?? 0,
-      bankSum: res.sum_bank ?? 0,
-      cashSum: res.sum_cash ?? 0,
-      myPrice: res.my_price ?? 0,
-      sdacha: res.sdacha ?? 0,
+      allCount: res.stat.count ?? 0,
+      bankCount: res.stat.count_bank ?? 0,
+      cashCount: res.stat.count_cash ?? 0,
+      bankSum: res.stat.sum_bank ?? 0,
+      cashSum: res.stat.sum_cash ?? 0,
+      myPrice: res.stat.my_price ?? 0,
+      sdacha: res.stat.sdacha ?? 0,
       
       myCash: res.stat.my_cash ?? 0,
       giveList: res.give_hist ?? [],
