@@ -406,7 +406,8 @@ class MapOrders_ extends React.Component {
     let data = {
       token: localStorage.getItem('token'),
       id: id,
-      type: type
+      type: type,
+      appToken: localStorage.getItem('appToken') && localStorage.getItem('appToken').length > 0 ? localStorage.getItem('appToken') : ''
     };
     
     let res = await this.getData('actionOrder', data);
