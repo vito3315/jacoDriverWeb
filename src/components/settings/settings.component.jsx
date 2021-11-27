@@ -16,6 +16,9 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Button from '@mui/material/Button';
 
+import FormGroup from '@mui/material/FormGroup';
+import Checkbox from '@mui/material/Checkbox';
+
 import { ChromePicker } from 'react-color';
 
 const queryString = require('query-string');
@@ -77,7 +80,8 @@ class Settings_ extends React.Component {
       is_load: false,
       
       groupTypeTime: 'norm',
-      color: 'blue'
+      color: 'blue',
+      centered_map: false,
     };
   }
   
@@ -115,7 +119,8 @@ class Settings_ extends React.Component {
     let res = await this.getData('getMySetting', data);
     
     this.setState({
-      groupTypeTime: res.type_data_map
+      groupTypeTime: res.type_data_map,
+      centered_map: parseInt(res.action_centered_map) == 1 ? true : true
     })
     
     if( res.color ){
@@ -139,7 +144,8 @@ class Settings_ extends React.Component {
     let data = {
       token: localStorage.getItem('token'),
       typeMap: this.state.groupTypeTime,
-      color: this.state.color
+      color: this.state.color,
+      centered_map: this.state.centered_map ? 1 : 0
     };
     
     let res = await this.getData('saveMySetting', data);
@@ -181,6 +187,12 @@ class Settings_ extends React.Component {
               </RadioGroup>
             </FormControl>
             
+          </Grid>
+          
+          <Grid item xs={12} style={{ marginTop: 10 }}>
+            <FormGroup>
+              <FormControlLabel control={<Checkbox checked={this.state.centered_map} onClick={ (event) => { this.setState({ centered_map: event.target.checked }) } } />} label="При действии с карточкой на карте, центрировать карту" />
+            </FormGroup>
           </Grid>
           
           <Grid item xs={12} style={{ marginTop: 10 }}>

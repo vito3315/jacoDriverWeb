@@ -236,6 +236,7 @@ export class CardItemList extends PureComponent{
 
 class ListOrders_ extends React.Component {
   timerId = null;
+  timerId2 = null;
   _isMounted = false;
   
   constructor(props) {
@@ -259,21 +260,21 @@ class ListOrders_ extends React.Component {
         { id: 5, text: 'У других курьеров' }, 
         { id: 6, text: 'Мои завершенные' }, //мои завершенеы
       ],
+      
+      driver_need_gps: false
     };
   }
   
   componentWillUnmount(){
     this._isMounted = false;
     clearInterval(this.timerId);
+    clearInterval(this.timerId2);
   }
   
   async componentDidMount(){
     this._isMounted = true;
     
     if((window.location.protocol == 'http:' || window.location.protocol == 'http') && window.location.hostname != 'localhost'){
-      
-      console.log( 'goTo', 'https://jacodriver.ru/'+window.location.pathname )
-      
       window.location.href = 'https://jacodriver.ru/'+window.location.pathname;
     }
     
@@ -300,6 +301,9 @@ class ListOrders_ extends React.Component {
       console.log(message) // при отказе в доступе получаем PositionError: User denied Geolocation
     }
     
+    this.getOrders(false, this.state.type.id);
+    this.save_position();
+    
     this.timerId = setInterval(() => {
       if( this._isMounted ){
         this.getOrders(false, this.state.type.id);
@@ -307,6 +311,14 @@ class ListOrders_ extends React.Component {
         clearInterval(this.timerId);
       }
     }, 1000 * 30);
+    
+    this.timerId2 = setInterval(() => {
+      if( this._isMounted ){
+        this.save_position();
+      }else{
+        clearInterval(this.timerId2);
+      }
+    }, 1000 * 60 * 2);
     
     setTimeout( () => {
       this.getOrders();
@@ -385,6 +397,7 @@ class ListOrders_ extends React.Component {
         }
         
         this.setState({
+          driver_need_gps: res.driver_need_gps,
           orders: orders,
           is_load: false
         })
@@ -392,8 +405,62 @@ class ListOrders_ extends React.Component {
     }
   }
   
+  async save_position(){
+    navigator.geolocation.getCurrentPosition(success, error, {
+      // высокая точность
+      enableHighAccuracy: true
+    })
+    
+    function success({ coords }) {
+      const { latitude, longitude } = coords
+      
+      let data1 = {
+        token: localStorage.getItem('token'),
+        lat: latitude,
+        lon: longitude,
+      };
+      
+      fetch('https://jacochef.ru/api/site/driver.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type':'application/x-www-form-urlencoded'},
+        body: queryString.stringify({
+          type: 'savePosition', 
+          data: JSON.stringify( data1 )
+        })
+      }).then(res => res.json()).then(json => {
+        console.log( 'res1', json )
+      })
+      .catch(err => { 
+        console.log( err )
+      });
+    }
+    
+    function error({ message }) {
+      console.log(message) // при отказе в доступе получаем PositionError: User denied Geolocation
+    }
+  }
+  
   async actionOrder(id, type){
     //1 - get / 2 - close / 3 - finish
+    
+    navigator.geolocation.getCurrentPosition(success, error, {
+      // высокая точность
+      enableHighAccuracy: true
+    })
+    
+    function success({ coords }) {
+      
+    }
+    
+    function error({ message }) {
+      if( parseInt(this.state.driver_need_gps) == 1 ){
+        alert('Чтобы осуществлять доставку заказов, надо разрешить определение местоположения');
+        
+        return;
+      }
+    }
+    
     this.setState({
       is_load: true
     })
