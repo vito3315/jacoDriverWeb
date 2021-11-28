@@ -38,7 +38,7 @@ class MapOrders_ extends React.Component {
       
       is_open: false,
       is_open_order: false,
-      openOrder: null,
+      showItems: [],
       
       type: { id: 1, text: 'Активные' },
       
@@ -363,7 +363,7 @@ class MapOrders_ extends React.Component {
     
     this.setState({
       is_open_order: false,
-      openOrder: null
+      showItems: []
     })
     
     if( parseInt(type) == 3 ){
@@ -429,9 +429,13 @@ class MapOrders_ extends React.Component {
   }
   
   showOrder(order){
+    let orders = this.state.orders;
+    
+    orders = orders.filter( (item) => item.xy.latitude == order.xy.latitude && item.xy.longitude == order.xy.longitude );
+    
     this.setState({
       is_open_order: true,
-      openOrder: order
+      showItems: orders
     })
   }
   
@@ -468,11 +472,11 @@ class MapOrders_ extends React.Component {
           <Drawer
             anchor={'bottom'}
             open={this.state.is_open_order}
-            onClose={ () => { this.setState({ is_open_order: false, openOrder: null }) } }
+            onClose={ () => { this.setState({ is_open_order: false, showItems: [] }) } }
           >
-            { !this.state.openOrder ? null :
-              <CardItemList item={this.state.openOrder} actionOrder={this.actionOrder.bind(this)} />
-            }
+            { this.state.showItems.map( (item, key) =>
+              <CardItemList key={key} item={item} actionOrder={this.actionOrder.bind(this)} />
+            )}
           </Drawer>
         </React.Fragment>
         
