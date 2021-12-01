@@ -261,7 +261,8 @@ class ListOrders_ extends React.Component {
         { id: 6, text: 'Мои завершенные' }, //мои завершенеы
       ],
       
-      driver_need_gps: false
+      driver_need_gps: false,
+      limit: ''
     };
   }
   
@@ -303,14 +304,6 @@ class ListOrders_ extends React.Component {
     
     this.getOrders(false, this.state.type.id);
     this.save_position();
-    
-    this.timerId = setInterval(() => {
-      if( this._isMounted ){
-        this.getOrders(false, this.state.type.id);
-      }else{
-        clearInterval(this.timerId);
-      }
-    }, 1000 * 30);
     
     this.timerId2 = setInterval(() => {
       if( this._isMounted ){
@@ -363,11 +356,22 @@ class ListOrders_ extends React.Component {
       is_map: 0
     };
     
-    let res = await this.getData('get_orders_v3', data);
+    let res = await this.getData('get_orders_v4', data);
     
     if( res === false ){
       
     }else{
+      
+      if( (!this.timerId || this.timerId == 0) && res.update_interval != 0 ){
+        this.timerId = setInterval(() => {
+          if( this._isMounted ){
+            this.getOrders(false, this.state.type.id);
+          }else{
+            clearInterval(this.timerId);
+          }
+        }, 1000 * parseInt(res.update_interval));
+      }
+      
       setTimeout( () => {
         let orders = [];
         
@@ -399,9 +403,10 @@ class ListOrders_ extends React.Component {
         this.setState({
           driver_need_gps: res.driver_need_gps,
           orders: orders,
-          is_load: false
+          is_load: false,
+          limit: res.limit
         })
-      }, 1000 )
+      }, 300 )
     }
   }
   
@@ -512,9 +517,10 @@ class ListOrders_ extends React.Component {
     let res = await this.getData('actionOrder', data);
     
     if( res['st'] == false ){
+      
+      alert(res['text'])
+      
       this.setState({ 
-        showErr: true,
-        textErr: res['text'],
         is_load: false
       })
     }else{
@@ -529,10 +535,14 @@ class ListOrders_ extends React.Component {
           <CircularProgress color="inherit" />
         </Backdrop>
         
-        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 10 }}>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <Button onClick={ () => { this.setState({ is_open: true }) } }>{this.state.type.text}</Button>
           
           <Button style={{ marginRight: 3 }} onClick={this.getOrders.bind(this, true, this.state.type.id)}><CachedIcon /></Button>
+        </div>
+        
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 10 }}>
+          <Typography style={{ fontSize: 20, fontWeight: 'bold', color: '#000' }} component="span">{this.state.limit}</Typography>
         </div>
         
         <React.Fragment>

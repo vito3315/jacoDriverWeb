@@ -82,6 +82,8 @@ class Settings_ extends React.Component {
       groupTypeTime: 'norm',
       color: 'blue',
       centered_map: false,
+      update_interval: 0,
+      update_interval_list: []
     };
   }
   
@@ -120,7 +122,9 @@ class Settings_ extends React.Component {
     
     this.setState({
       groupTypeTime: res.type_data_map,
-      centered_map: parseInt(res.action_centered_map) == 1 ? true : true
+      centered_map: parseInt(res.action_centered_map) == 1 ? true : false,
+      update_interval_list: res.update_interval_list,
+      update_interval: res.update_interval ? parseInt(res.update_interval) : 30
     })
     
     if( res.color ){
@@ -145,7 +149,8 @@ class Settings_ extends React.Component {
       token: localStorage.getItem('token'),
       typeMap: this.state.groupTypeTime,
       color: this.state.color,
-      centered_map: this.state.centered_map ? 1 : 0
+      centered_map: this.state.centered_map ? 1 : 0,
+      update_interval: this.state.update_interval
     };
     
     let res = await this.getData('saveMySetting', data);
@@ -193,6 +198,29 @@ class Settings_ extends React.Component {
             <FormGroup>
               <FormControlLabel control={<Checkbox checked={this.state.centered_map} onClick={ (event) => { this.setState({ centered_map: event.target.checked }) } } />} label="При действии с карточкой на карте, центрировать карту" />
             </FormGroup>
+          </Grid>
+          
+          <Grid item xs={12} style={{ marginTop: 10 }}>
+            
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Частота обновления заказов</FormLabel>
+              <RadioGroup
+                aria-label="gender"
+                name="radio-buttons-group1"
+                value={this.state.update_interval}
+                onChange={ (event, data) => { 
+                  this.setState({
+                    update_interval: data
+                  }) 
+                } }
+              >
+                
+                {this.state.update_interval_list.map( (item, key) =>
+                  <FormControlLabel key={key} value={item.id} control={<Radio />} label={item.name} />
+                )}
+              </RadioGroup>
+            </FormControl>
+            
           </Grid>
           
           <Grid item xs={12} style={{ marginTop: 10 }}>

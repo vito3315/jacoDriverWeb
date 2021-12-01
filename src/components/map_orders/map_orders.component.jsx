@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { useHistory } from "react-router-dom";
 
 import Grid from '@mui/material/Grid';
@@ -12,12 +12,9 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { CardItemList } from '../list_orders/';
 
 import CachedIcon from '@mui/icons-material/Cached';
-import ScreenRotationIcon from '@mui/icons-material/ScreenRotation';
-import ScreenLockRotationIcon from '@mui/icons-material/ScreenLockRotation';
+import Typography from '@mui/material/Typography';
 
 const queryString = require('query-string');
-
-
 
 class MapOrders_ extends React.Component {
   timerId = null;
@@ -49,7 +46,8 @@ class MapOrders_ extends React.Component {
       ],
       
       rotate: true,
-      driver_need_gps: false
+      driver_need_gps: false,
+      limit: ''
     };
   }
   
@@ -91,14 +89,6 @@ class MapOrders_ extends React.Component {
     
     this.getOrders(false, this.state.type.id);
     this.save_position();
-    
-    this.timerId = setInterval(() => {
-      if( this._isMounted ){
-        this.getOrders(false, this.state.type.id);
-      }else{
-        clearInterval(this.timerId);
-      }
-    }, 1000 * 30);
     
     this.timerId2 = setInterval(() => {
       if( this._isMounted ){
@@ -183,13 +173,22 @@ class MapOrders_ extends React.Component {
       is_map: 1
     };
     
-    let res = await this.getData('get_orders_v3', data);
-    
-    console.log( res.home )
+    let res = await this.getData('get_orders_v4', data);
     
     if( res === false ){
       
     }else{
+      
+      if( (!this.timerId || this.timerId == 0) && res.update_interval != 0 ){
+        this.timerId = setInterval(() => {
+          if( this._isMounted ){
+            this.getOrders(false, this.state.type.id);
+          }else{
+            clearInterval(this.timerId);
+          }
+        }, 1000 * parseInt(res.update_interval));
+      }
+      
       setTimeout( () => {
         let orders = [];
         
@@ -212,7 +211,8 @@ class MapOrders_ extends React.Component {
           driver_need_gps: res.driver_need_gps,
           orders: orders,
           home: res.home,
-          is_load: false
+          is_load: false,
+          limit: res.limit
         })
         
         let objectManager = new ymaps.ObjectManager();
@@ -333,7 +333,7 @@ class MapOrders_ extends React.Component {
           }
         });
         
-      }, 1000 )
+      }, 300 )
     }
   }
   
@@ -413,9 +413,10 @@ class MapOrders_ extends React.Component {
     let res = await this.getData('actionOrder', data);
     
     if( res['st'] == false ){
+      
+      alert(res['text'])
+      
       this.setState({ 
-        showErr: true,
-        textErr: res['text'],
         is_load: false
       })
     }else{
@@ -452,6 +453,10 @@ class MapOrders_ extends React.Component {
           <Button style={{ color: this.state.type.id == 5 ? '#2c75ff' : '#000', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 5) }>У других</Button>
           
           <Button style={{ marginRight: 3 }} onClick={this.getOrders.bind(this, true, this.state.type.id)}><CachedIcon /></Button>
+        </div>
+        
+        <div style={{ position: 'absolute', zIndex: 10, display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '100%', left: 0, top: 140 }}>
+          <Typography style={{ fontSize: 20, fontWeight: 'bold', color: '#000' }} component="span">{this.state.limit}</Typography>
         </div>
         
         
