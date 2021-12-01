@@ -112,7 +112,7 @@ class MapOrders_ extends React.Component {
       return json;
     })
     .catch(err => { 
-      alert('Плохая связь с интернетом или ошибка на сервере')
+      //alert('Плохая связь с интернетом или ошибка на сервере')
       console.log( err )
     });
   }
