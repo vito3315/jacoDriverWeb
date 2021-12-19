@@ -47,7 +47,9 @@ class MapOrders_ extends React.Component {
       
       rotate: true,
       driver_need_gps: false,
-      limit: ''
+      limit: '',
+
+      is_open_home: false
     };
   }
   
@@ -227,26 +229,24 @@ class MapOrders_ extends React.Component {
               searchControlProvider: 'yandex#search'
             })
             
-            //дом
-            let myGeoObject = new ymaps.GeoObject({
-              geometry: {
-                type: "Point",
-                coordinates: [res.home.latitude, res.home.longitude]
-              },
-            }, {
-              preset: 'islands#blackDotIcon', 
-              iconColor: 'black'
-            })
-            
-            this.map.geoObjects.add(myGeoObject);
-            
-            
-            
             let json = {
               "type": "FeatureCollection",
               "features": []
             };
                     
+            json.features.push({
+              type: "Feature",
+              id: -1,
+              options: {
+                preset: 'islands#blackDotIcon', 
+                iconColor: 'black'
+              },
+              geometry: {
+                type: "Point",
+                coordinates: [res.home.latitude, res.home.longitude]
+              },
+            })
+
             orders.map( function(item){
             
               json.features.push({
@@ -283,7 +283,7 @@ class MapOrders_ extends React.Component {
           //дом
           json.features.push({
             type: "Feature",
-            id: 0,
+            id: -1,
             options: {
               preset: 'islands#blackDotIcon', 
               iconColor: 'black'
@@ -326,10 +326,17 @@ class MapOrders_ extends React.Component {
         
         objectManager.objects.events.add(['click'], (e) => {
           let order_id = e.get('objectId');
-          let order = this.state.orders.find( (item) => parseInt(item.id) == parseInt(order_id) );
-          
-          if( order ){
-            this.showOrder(order);
+
+          console.log( 'order_id', order_id )
+
+          if( order_id == -1 || order_id == '-1' ){
+            this.setState({ is_open_home: true })
+          }else{
+            let order = this.state.orders.find( (item) => parseInt(item.id) == parseInt(order_id) );
+            
+            if( order ){
+              this.showOrder(order);
+            }
           }
         });
         
@@ -440,6 +447,54 @@ class MapOrders_ extends React.Component {
     })
   }
   
+  stateHome(){
+    navigator.geolocation.getCurrentPosition(({ coords }) => {
+      const { latitude, longitude } = coords
+        
+      let data1 = {
+        token: localStorage.getItem('token'),
+        lat: latitude,
+        lon: longitude,
+      };
+      
+      fetch('https://jacochef.ru/api/site/driver.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type':'application/x-www-form-urlencoded'},
+        body: queryString.stringify({
+          type: 'checkPositionHome', 
+          data: JSON.stringify( data1 )
+        })
+      }).then(res => res.json()).then(json => {
+        console.log( 'res1', json )
+
+        this.closeSS();
+      })
+      .catch(err => { 
+        console.log( err )
+      });
+    }, error, {
+      // высокая точность
+      enableHighAccuracy: true
+    })
+    
+    function success({ coords }){
+      
+    }
+    
+    function error({ message }) {
+      if( parseInt(this.state.driver_need_gps) == 1 ){
+        alert('Чтобы отметиться на точке, надо разрешить определение местоположения');
+        
+        return;
+      }
+    }
+  }
+
+  closeSS(){
+    this.setState({ is_open_home: false })
+  }
+
   render(){
     return (
       <>
@@ -447,15 +502,15 @@ class MapOrders_ extends React.Component {
           <CircularProgress color="inherit" />
         </Backdrop>
         
-        <div style={{ position: 'absolute', zIndex: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', left: 0, top: 100 }}>
-          <Button style={{ marginLeft: 38, color: this.state.type.id == 1 ? '#2c75ff' : '#000', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 1) }>Активные</Button>
-          <Button style={{ color: this.state.type.id == 2 ? '#2c75ff' : '#000', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 2) }>Мои</Button>
-          <Button style={{ color: this.state.type.id == 5 ? '#2c75ff' : '#000', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 5) }>У других</Button>
+        <div style={{ position: 'absolute', zIndex: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '90%', left: '5%', bottom: 50, backgroundColor: '#000', opacity: 0.5, borderRadius: 60 }}>
+          <Button style={{ marginLeft: 38, color: this.state.type.id == 1 ? 'green' : '#fff', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 1) }>Активные</Button>
+          <Button style={{ color: this.state.type.id == 2 ? 'green' : '#fff', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 2) }>Мои</Button>
+          <Button style={{ color: this.state.type.id == 5 ? 'green' : '#fff', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 5) }>У других</Button>
           
-          <Button style={{ marginRight: 3 }} onClick={this.getOrders.bind(this, true, this.state.type.id)}><CachedIcon /></Button>
+          <Button style={{ marginRight: 3 }} onClick={this.getOrders.bind(this, true, this.state.type.id)}><CachedIcon style={{ color: '#fff' }} /></Button>
         </div>
         
-        <div style={{ position: 'absolute', zIndex: 10, display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '100%', left: 0, top: 140 }}>
+        <div style={{ position: 'absolute', zIndex: 10, display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '100%', left: 0, bottom: 90 }}>
           <Typography style={{ fontSize: 20, fontWeight: 'bold', color: '#000' }} component="span">{this.state.limit}</Typography>
         </div>
         
@@ -484,13 +539,19 @@ class MapOrders_ extends React.Component {
             )}
           </Drawer>
         </React.Fragment>
+
+        <React.Fragment>
+          <Drawer
+            anchor={'bottom'}
+            open={this.state.is_open_home}
+            onClose={ () => { this.setState({ is_open_home: false }) } }
+          >
+            <Button className='bntAction typeItemsGreen' style={{ width: '100%', margin: '50px 0px' }} onClick={this.stateHome.bind(this)}>Отметиться на точке</Button>
+          </Drawer>
+        </React.Fragment>
         
         <Grid style={{zIndex: 9, margin: -16}}>
-          
-          
           <div id="map" name="map" style={{ width: '100%', height: 700, paddingTop: 10 }} />
-                    
-          
         </Grid>
       </>
     )

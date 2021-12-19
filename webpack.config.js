@@ -125,7 +125,7 @@ module.exports = {
     
     // development server configuration
     devServer: {
-        port: 5086,
+        port: 5087,
         historyApiFallback: true,
     },
 
