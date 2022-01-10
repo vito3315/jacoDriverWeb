@@ -64,6 +64,58 @@ export class CardItemList extends PureComponent{
       
     }
   }
+
+  checkFakeOrder(order_id){
+    navigator.geolocation.getCurrentPosition(({ coords }) => {
+      const { latitude, longitude } = coords
+        
+      let data1 = {
+        token: localStorage.getItem('token'),
+        order_id: order_id,
+        lat: latitude,
+        lon: longitude,
+      };
+      
+      fetch('https://jacochef.ru/api/site/driver.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type':'application/x-www-form-urlencoded'},
+        body: queryString.stringify({
+          type: 'checkFakeOrder', 
+          data: JSON.stringify( data1 )
+        })
+      }).then(res => res.json()).then(json => {
+        console.log( 'res1', json )
+
+        if( json['st'] === false ){
+          alert(json['text']);
+        }else{
+          alert('Успешно')
+        }
+        
+      })
+      .catch(err => { 
+        console.log( err )
+      });
+    }, error, {
+      // высокая точность
+      enableHighAccuracy: true
+    })
+
+    function error({ message }) {
+      alert('Не удалось определить местоположение');
+      
+      return;
+    }
+  }
+
+  fakeOrder(order_id){
+    if(confirm("Клиент точно не вышел на свзяь ?")) {
+      this.checkFakeOrder(order_id)
+    } else {
+      
+    }
+  }
   
   render(){
     const item = this.props.item;
@@ -220,6 +272,10 @@ export class CardItemList extends PureComponent{
               { parseInt(item.status_order) == 6 ? null :
                 <Button className='bntAction typeItemsGreen' style={{ width: width, marginTop: 10 }} onClick={this.finishOrder.bind(this, item.id)}>Завершить</Button>
               }
+
+              { parseInt(item.status_order) == 6 ? null :
+                <Button className='bntAction typeItemsYellow' style={{ width: width, marginTop: 10 }} onClick={this.fakeOrder.bind(this, item.id)}>Клиент не вышел на связь</Button>
+              }
             </div>
               :
             <div style={{ display: 'flex', flexDirection: 'column', marginLeft: 0, width: width, alignItems: 'center', justifyContent: 'center', paddingTop: 10 }}>
@@ -247,6 +303,8 @@ class ListOrders_ extends React.Component {
       module_name: '',
       is_load: false,
       
+      del_orders: [],
+
       orders: [],
       
       is_open: false,
@@ -356,7 +414,7 @@ class ListOrders_ extends React.Component {
       is_map: 0
     };
     
-    let res = await this.getData('get_orders_v4', data);
+    let res = await this.getData('get_orders_v5', data);
     
     if( res === false ){
       
@@ -402,6 +460,7 @@ class ListOrders_ extends React.Component {
         
         this.setState({
           driver_need_gps: res.driver_need_gps,
+          del_orders: res.arr_del_list,
           orders: orders,
           is_load: false,
           limit: res.limit
@@ -504,6 +563,8 @@ class ListOrders_ extends React.Component {
       
       function error({ message }) {
         console.log(message) // при отказе в доступе получаем PositionError: User denied Geolocation
+
+        alert('Не удалось опеределить местоположение')
       }
     }
     
@@ -528,6 +589,26 @@ class ListOrders_ extends React.Component {
     }
   }
   
+  async is_show_del_orders(){
+
+    let idList = [];
+
+    this.state.del_orders.map( (item, key) => {
+      idList.push(item.id)
+    } )
+
+    let data = {
+      token: localStorage.getItem('token'),
+      idList: idList
+    };
+    
+    let res = await this.getData('check_close_orders', data);
+
+    this.setState({
+      del_orders: []
+    })
+  }
+
   render(){
     return (
       <>
@@ -545,6 +626,27 @@ class ListOrders_ extends React.Component {
           <Typography style={{ fontSize: 20, fontWeight: 'bold', color: '#000' }} component="span">{this.state.limit}</Typography>
         </div>
         
+        <React.Fragment>
+          <Drawer
+            anchor={'bottom'}
+            open={ this.state.del_orders.length > 0 ? true : false }
+            onClose={ this.is_show_del_orders.bind(this) }
+          >
+            <Typography style={{ fontSize: 20, paddingTop: 10, paddingBottom: 10, color: '#000', textAlign: 'center', fontWeight: 'bold' }} component="h6">Удаленные заказы</Typography>
+
+            <div style={{ height: 300, width: '100%', overflow: 'auto', padding: 20, paddingTop: 10 }}>
+              { this.state.del_orders.map( (item, key) =>
+                <div key={key} style={{ display: 'flex', flexDirection: 'column' }}>
+                  <Typography style={{ fontSize: 15, color: '#000' }} component="span">Удаленный заказ #{item.id}</Typography>
+                  <Typography style={{ fontSize: 15, paddingBottom: 20, color: '#000' }} component="span">Адрес: {item.addr}</Typography>
+                </div>
+              )}
+            </div>
+            
+            <Button onClick={this.is_show_del_orders.bind(this)}>Хорошо</Button>
+          </Drawer>
+        </React.Fragment>
+
         <React.Fragment>
           <Drawer
             anchor={'bottom'}

@@ -139,9 +139,16 @@ class Price_ extends React.Component {
     
     let date = new Date(this.state.date);
     
+    let day = date.getDate();
+    day = parseInt(day) > 9 ? day : '0'+day;
+    
+    let month = date.getMonth()+1;
+    month = parseInt(month) > 9 ? month : '0'+month;
+
     let fullDate = date.getFullYear() + '-';
-    fullDate += date.getMonth()+1 + '-';
-    fullDate += date.getDate();
+    fullDate += month + '-';
+    fullDate += day;
+    
     
     let data = {
       token: localStorage.getItem('token'),

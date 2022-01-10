@@ -143,8 +143,11 @@ class Graph_ extends React.Component {
     if( day == '' ){
       let date = new Date();
     
+      let month = date.getMonth()+1;
+      month = parseInt(month) > 9 ? month : '0'+month;
+
       let fullDate = date.getFullYear() + '-';
-      fullDate += date.getMonth()+1;
+      fullDate += month;
       
       day = fullDate;
     }
