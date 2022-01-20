@@ -61,12 +61,13 @@
     color: #000!important;
 }
 .bntAction{
-    height: 30px; 
+    height: 50px; 
     display: flex; 
     flex-direction: row; 
     align-items: center; 
     justify-content: center; 
-    border-radius: 5px
+    border-radius: 5px;
+    font-size: 1.2rem;
 }
 .MuiTooltip-popper{
     margin-top: 0!important;

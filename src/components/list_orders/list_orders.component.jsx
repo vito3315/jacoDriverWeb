@@ -254,13 +254,13 @@ export class CardItemList extends PureComponent{
         }
         
         { parseInt(item.is_get) == 0 ?
-          <div style={{ display: 'flex', flexDirection: 'column', marginLeft: 0, width: width, alignItems: 'center', justifyContent: 'center', paddingTop: 10 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', marginLeft: 0, width: width, alignItems: 'center', justifyContent: 'center', paddingTop: 20 }}>
             <a className='bntAction typeItemsGray' style={{ width: '100%', marginBottom: 10 }} href={"tel:"+item.number}>{item.number}</a>
             <Button className='bntAction typeItemsGreen' style={{ width: '100%' }} onClick={this.props.actionOrder.bind(this, item.id, 1)}>Взять</Button>
           </div>
             :
           parseInt(item.is_get) == 1 && parseInt(item.is_my) == 1 ?
-            <div style={{ display: 'flex', flexDirection: 'column', width: width, alignItems: 'center', justifyContent: 'center', paddingTop: 10 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', width: width, alignItems: 'center', justifyContent: 'center', paddingTop: 20 }}>
               
               <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: width }}>
                 { parseInt(item.status_order) == 6 ? null :
@@ -270,17 +270,17 @@ export class CardItemList extends PureComponent{
               </div>
               
               { parseInt(item.status_order) == 6 ? null :
-                <Button className='bntAction typeItemsGreen' style={{ width: width, marginTop: 10 }} onClick={this.finishOrder.bind(this, item.id)}>Завершить</Button>
+                <Button className='bntAction typeItemsGreen' style={{ width: width, marginTop: 20 }} onClick={this.finishOrder.bind(this, item.id)}>Завершить</Button>
               }
 
               { parseInt(item.status_order) == 6 ? null :
-                <Button className='bntAction typeItemsYellow' style={{ width: width, marginTop: 10 }} onClick={this.fakeOrder.bind(this, item.id)}>Клиент не вышел на связь</Button>
+                <Button className='bntAction typeItemsYellow' style={{ width: width, marginTop: 20 }} onClick={this.fakeOrder.bind(this, item.id)}>Клиент не вышел на связь</Button>
               }
             </div>
               :
-            <div style={{ display: 'flex', flexDirection: 'column', marginLeft: 0, width: width, alignItems: 'center', justifyContent: 'center', paddingTop: 10 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', marginLeft: 0, width: width, alignItems: 'center', justifyContent: 'center', paddingTop: 20 }}>
               <Button className='bntAction typeItemsGray' style={{ width: '100%', textAlign: 'center' }}>{item.driver_name}</Button>
-              <a className='bntAction typeItemsGray' style={{ width: '100%', textAlign: 'center', marginTop: 10, color: '#000' }} href={"tel:"+item.driver_login}>{item.driver_login}</a>
+              <a className='bntAction typeItemsGray' style={{ width: '100%', textAlign: 'center', marginTop: 20, color: '#000' }} href={"tel:"+item.driver_login}>{item.driver_login}</a>
             </div>
         }
         
