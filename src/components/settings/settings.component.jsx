@@ -21,6 +21,8 @@ import Checkbox from '@mui/material/Checkbox';
 
 import { ChromePicker } from 'react-color';
 
+import config from '../../stores/config';
+
 const queryString = require('query-string');
 
 const theme = createTheme({
@@ -83,7 +85,8 @@ class Settings_ extends React.Component {
       color: 'blue',
       centered_map: false,
       update_interval: 0,
-      update_interval_list: []
+      update_interval_list: [],
+      type_show_del: 'max'
     };
   }
   
@@ -96,7 +99,7 @@ class Settings_ extends React.Component {
   }
   
   getData = (method, data = {}) => {
-    return fetch('https://jacochef.ru/api/site/driver.php', {
+    return fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
@@ -122,6 +125,7 @@ class Settings_ extends React.Component {
     
     this.setState({
       groupTypeTime: res.type_data_map,
+      type_show_del: res.type_show_del,
       centered_map: parseInt(res.action_centered_map) == 1 ? true : false,
       update_interval_list: res.update_interval_list,
       update_interval: res.update_interval ? parseInt(res.update_interval) : 30
@@ -189,6 +193,28 @@ class Settings_ extends React.Component {
                 <FormControlLabel value="norm" control={<Radio />} label="Обычный (об заказ - время оформления, пред - промежуток времени)" />
                 <FormControlLabel value="full" control={<Radio />} label="Полный (промежуток времени)" />
                 <FormControlLabel value="min" control={<Radio />} label="Сокращенный (только оставшееся время)" />
+              </RadioGroup>
+            </FormControl>
+            
+          </Grid>
+
+          <Grid item xs={12} style={{ marginTop: 10 }}>
+            
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Отмененные заказы</FormLabel>
+              <RadioGroup
+                aria-label="gender"
+                name="radio-buttons-group"
+                value={this.state.type_show_del}
+                onChange={ (event, data) => { 
+                  this.setState({
+                    type_show_del: data
+                  }) 
+                } }
+              >
+                <FormControlLabel value="full" control={<Radio />} label="Показывать весь день" />
+                <FormControlLabel value="min" control={<Radio />} label="30 минут" />
+                <FormControlLabel value="max" control={<Radio />} label="2 часа" />
               </RadioGroup>
             </FormControl>
             

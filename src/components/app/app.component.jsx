@@ -26,6 +26,7 @@ import { useHistory } from "react-router-dom";
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 
 import routes from '../../../server/routes';
+import config from '../../stores/config';
 
 const queryString = require('query-string');
 
@@ -155,48 +156,39 @@ class Header extends React.Component {
     console.log( window.location.protocol )
     
     if((window.location.protocol == 'http:' || window.location.protocol == 'http') && window.location.hostname != 'localhost'){
-      
-      console.log( 'goTo', 'https://jacodriver.ru/'+window.location.pathname )
-      
       window.location.href = 'https://jacodriver.ru/'+window.location.pathname;
     }
     
     let thisUri = window.location.pathname;
     
-    if( /*thisUri == '/' || thisUri == ''*/ false ){
-      this.state.history.push("/list_orders");
-      window.location.reload();
-    }else{
-      let find_route = routes.find( (item) => thisUri.includes(item.path) );
     
+    let find_route = routes.find( (item) => thisUri.includes(item.path) );
+  
+    this.setState({
+      title: find_route.title
+    })
+    
+    window.document.title = find_route.title;
+    
+    let data = {
+      token: localStorage.getItem('token')
+    };
+    
+    let res = await this.getData('getPointInfo', data);
+    
+    console.log( res )
+    
+    if( res ){
       this.setState({
-        title: find_route.title
+        phone_man: res.phone_man,
+        phone_center: res.phone_new,
+        phone_dir: res.phone_upr
       })
-      
-      window.document.title = find_route.title;
-      
-      let data = {
-        token: localStorage.getItem('token')
-      };
-      
-      let res = await this.getData('getPointInfo', data);
-      
-      console.log( res )
-      
-      if( res ){
-        this.setState({
-          phone_man: res.phone_man,
-          phone_center: res.phone_new,
-          phone_dir: res.phone_upr
-        })
-      }
     }
-    
-    
   }
   
   getData = (method, data = {}) => {
-    return fetch('https://jacochef.ru/api/site/driver.php', {
+    return fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
@@ -208,7 +200,7 @@ class Header extends React.Component {
       return json;
     })
     .catch(err => { 
-      alert('Плохая связь с интернетом или ошибка на сервере')
+      //alert('Плохая связь с интернетом или ошибка на сервере 11')
       console.log( err )
     });
   }

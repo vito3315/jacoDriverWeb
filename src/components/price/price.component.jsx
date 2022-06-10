@@ -11,9 +11,9 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 
 import TextField from '@mui/material/TextField';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import MobileDatePicker from '@mui/lab/MobileDatePicker';
+//import AdapterDateFns from '@mui/lab/AdapterDateFns';
+//import LocalizationProvider from '@mui/lab/LocalizationProvider';
+//import MobileDatePicker from '@mui/lab/MobileDatePicker';
 import Stack from '@mui/material/Stack';
 import ruLocale from "date-fns/locale/ru";
 
@@ -25,6 +25,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableFooter from '@mui/material/TableFooter';
+
+
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+import config from '../../stores/config';
 
 const queryString = require('query-string');
 
@@ -72,6 +79,20 @@ const useStyles = makeStyles({
   }
 });
 
+function formatDate(date) {
+  var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+  if (month.length < 2) 
+      month = '0' + month;
+  if (day.length < 2) 
+      day = '0' + day;
+
+  return [year, month, day].join('-');
+}
+
 class Price_ extends React.Component {
   constructor(props) {
     super(props);
@@ -82,7 +103,7 @@ class Price_ extends React.Component {
       
       is_load: false,
       
-      date: new Date(),
+      date: formatDate(new Date()),
       
       allCount: 0,
       bankCount: 0,
@@ -108,7 +129,7 @@ class Price_ extends React.Component {
   }
   
   getData = (method, data = {}) => {
-    return fetch('https://jacochef.ru/api/site/driver.php', {
+    return fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
@@ -127,7 +148,7 @@ class Price_ extends React.Component {
    
   changeDate(date){
     this.setState({
-      date: date
+      date: formatDate(date)
     })
     
     setTimeout( () => {
@@ -184,24 +205,18 @@ class Price_ extends React.Component {
           <Grid item xs={12} sm={3} style={{ marginTop: 10 }}>
             
             <LocalizationProvider dateAdapter={AdapterDateFns} locale={ruLocale}>
-              <Stack spacing={3}>
-                <MobileDatePicker
-                  label="Дата"
-                  
-                  allowSameDateSelection={true}
-                  showTodayButton={true}
-                  startText={this.props.startText}
-                  endText={this.props.endText}
-                  value={this.props.value}
-                  inputFormat="yyyy-MM-dd"
-                  
-                  value={this.state.date}
-                  onChange={(newValue) => { this.changeDate(newValue) }}
-                  renderInput={(params) => <TextField {...params} />}
-                />
-                
-              </Stack>
-            </LocalizationProvider>
+              <DatePicker
+                multiple={false}
+                mask="____-__-__"
+                inputFormat="yyyy-MM-dd"
+                label={"Дата"}
+                value={formatDate(this.state.date)}
+                onChange={(newValue) => { this.changeDate(newValue) }}
+                renderInput={(params) => <TextField variant="outlined" size={'small'} color='primary' style={{ width: '100%' }} {...params} />}
+              />
+            </LocalizationProvider> 
+
+            
             
             <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', paddingTop: 10 }}>
               <Typography style={{ fontSize: 20, fontWeight: 'bold', color: '#000', paddingRight: 5 }} component="span">Cумма нала:</Typography>

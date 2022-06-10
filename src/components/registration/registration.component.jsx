@@ -22,6 +22,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
+import config from '../../stores/config';
+
 const queryString = require('query-string');
 
 const theme = createTheme({
@@ -112,7 +114,7 @@ class Reg_ extends React.Component {
       is_load: true
     })
     
-    return fetch('https://jacochef.ru/api/site/driver.php', {
+    return fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},

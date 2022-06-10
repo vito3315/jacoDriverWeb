@@ -14,6 +14,8 @@ import { CardItemList } from '../list_orders/';
 import CachedIcon from '@mui/icons-material/Cached';
 import Typography from '@mui/material/Typography';
 
+import config from '../../stores/config';
+
 const queryString = require('query-string');
 
 class MapOrders_ extends React.Component {
@@ -104,7 +106,7 @@ class MapOrders_ extends React.Component {
   }
   
   getData = (method, data = {}) => {
-    return fetch('https://jacochef.ru/api/site/driver.php', {
+    return fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},

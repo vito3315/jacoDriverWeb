@@ -29,6 +29,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 
+import config from '../../stores/config';
+
 const queryString = require('query-string');
 
 const theme = createTheme({
@@ -121,7 +123,7 @@ class Graph_ extends React.Component {
   }
   
   getData = (method, data = {}) => {
-    return fetch('https://jacochef.ru/api/site/driver.php', {
+    return fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},

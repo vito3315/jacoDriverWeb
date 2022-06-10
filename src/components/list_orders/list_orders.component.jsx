@@ -14,6 +14,8 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import CachedIcon from '@mui/icons-material/Cached';
 
+import config from '../../stores/config';
+
 const queryString = require('query-string');
 
 const HtmlTooltip = styled(({ className, ...props }) => (
@@ -190,7 +192,7 @@ export class CardItemList extends PureComponent{
             }
           </div>
           
-          { parseInt(item.fake_dom) == 0 ? null :
+          { parseInt(item.fake_dom) == 1 ? null :
             <Typography style={{ fontSize: 15, fontWeight: 'bold', color: '#000' }}>Домофон не работает</Typography>
           }
           
@@ -377,7 +379,7 @@ class ListOrders_ extends React.Component {
   }
   
   getData = (method, data = {}) => {
-    return fetch('https://jacochef.ru/api/site/driver.php', {
+    return fetch(config.urlApi, {
       method: 'POST',
       headers: {
         'Content-Type':'application/x-www-form-urlencoded'},
