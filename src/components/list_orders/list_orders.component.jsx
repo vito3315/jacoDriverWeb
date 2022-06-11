@@ -192,8 +192,10 @@ export class CardItemList extends PureComponent{
             }
           </div>
           
-          { parseInt(item.fake_dom) == 1 ? null :
+          { parseInt(item.fake_dom) == 0 ?
             <Typography style={{ fontSize: 15, fontWeight: 'bold', color: '#000' }}>Домофон не работает</Typography>
+              :
+            null
           }
           
           <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', paddingBottom: 5, paddingTop: 10 }}>

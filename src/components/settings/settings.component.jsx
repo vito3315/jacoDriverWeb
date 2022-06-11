@@ -154,7 +154,8 @@ class Settings_ extends React.Component {
       typeMap: this.state.groupTypeTime,
       color: this.state.color,
       centered_map: this.state.centered_map ? 1 : 0,
-      update_interval: this.state.update_interval
+      update_interval: this.state.update_interval,
+      type_show_del: this.state.type_show_del
     };
     
     let res = await this.getData('saveMySetting', data);
