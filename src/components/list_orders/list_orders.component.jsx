@@ -39,7 +39,8 @@ export class CardItemList extends PureComponent{
     super(props);
     
     this.state = { 
-      openTooltip: false
+      openTooltip: false,
+      is_load: false
     };
   }
   
@@ -68,6 +69,17 @@ export class CardItemList extends PureComponent{
   }
 
   checkFakeOrder(order_id){
+
+    this.setState({
+      is_load: true
+    })
+
+    setTimeout( () => {
+      this.setState({
+        is_load: false
+      })
+    }, 5000 )
+
     navigator.geolocation.getCurrentPosition(({ coords }) => {
       const { latitude, longitude } = coords
         
@@ -94,7 +106,12 @@ export class CardItemList extends PureComponent{
         }else{
           alert('Успешно')
         }
-        
+
+        setTimeout( () => {
+          this.setState({
+            is_load: false
+          })
+        }, 500 )
       })
       .catch(err => { 
         console.log( err )
@@ -127,6 +144,10 @@ export class CardItemList extends PureComponent{
     return(
       <div className='container'>
             
+          <Backdrop open={this.state.is_load} style={{ zIndex: 99 }}>
+            <CircularProgress color="inherit" />
+          </Backdrop>
+
         <div style={{ display: 'flex', flexDirection: 'column', paddingBottom: 10 }}>
           <Typography style={{ fontSize: 20, color: '#000' }} component="span">{item.id_text}</Typography>
         </div>
