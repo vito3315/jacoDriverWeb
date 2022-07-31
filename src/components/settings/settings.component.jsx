@@ -1,8 +1,4 @@
 import React from 'react';
-import { useHistory } from "react-router-dom";
-
-import { makeStyles } from '@mui/styles';
-import { createTheme } from '@mui/material/styles';
 
 import Grid from '@mui/material/Grid';
 
@@ -25,60 +21,13 @@ import config from '../../stores/config';
 
 const queryString = require('query-string');
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#c03',
-    }
-  },
-});
-
-const useStyles = makeStyles({
-  formControl: {
-    //margin: theme.spacing(1),
-    width: '100%',
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-  tableCel: {
-    textAlign: 'center',
-    borderRight: '1px solid #e5e5e5',
-    padding: 15,
-    cursor: 'pointer',
-    '&:hover': {
-      backgroundColor: "#e5e5e5",
-    },
-  },
-  tableCelHead: {
-    textAlign: 'center',
-    padding: 15
-  },
-  customCel: {
-    backgroundColor: "#bababa",
-    textAlign: 'center',
-    borderRight: '1px solid #e5e5e5',
-    padding: 15,
-    cursor: 'pointer',
-    '&:hover': {
-      backgroundColor: "#e5e5e5",
-    },
-  },
-  timePicker: {
-    width: '100%'
-  }
-});
-
 class Settings_ extends React.Component {
   click = false;
   
   constructor(props) {
     super(props);
         
-    this.state = {
-      classes: this.props.classes,
-      history: this.props.history,
-      
+    this.state = {      
       is_load: false,
       
       groupTypeTime: 'norm',
@@ -172,7 +121,7 @@ class Settings_ extends React.Component {
   render(){
     return (
       <>
-        <Backdrop className={this.state.classes.backdrop} open={this.state.is_load}>
+        <Backdrop style={{ zIndex: 999 }} open={this.state.is_load}>
           <CircularProgress color="inherit" />
         </Backdrop>
         
@@ -269,10 +218,7 @@ class Settings_ extends React.Component {
 }
 
 export function Settings() {
-  const classes = useStyles();
-  let history = useHistory();
-  
   return (
-    <Settings_ classes={classes} history={history} />
+    <Settings_ />
   );
 }
