@@ -235,7 +235,7 @@ class Header extends React.Component {
     return (
       <>
         <AppBar className={clsx(this.state.classes.appBar, this.state.open && this.state.classes.appBarShift)}>
-          <Toolbar className={this.state.classes.toolbar}>
+          <Toolbar>
             <IconButton
               edge="start"
               color="inherit"
