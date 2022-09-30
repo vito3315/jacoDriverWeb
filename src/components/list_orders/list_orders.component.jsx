@@ -157,6 +157,10 @@ export class CardItemList extends PureComponent{
           { parseInt(item.count_other) == 0 ? null :
             <Typography className='textBold typeItems typeItemsBlue' style={{ marginRight: 5 }} component="span">Роллы</Typography>
           }
+
+          { parseInt(item.count_pasta) == 0 ? null :
+            <Typography className='textBold typeItems typeItemsPurpur' style={{ marginRight: 5 }} component="span">Паста x{item.count_pasta}</Typography>
+          }
           
           { parseInt(item.count_pizza) == 0 ? null :
             <Typography className='textBold typeItems typeItemsRed' style={{ marginLeft: 5, marginRight: 5 }} component="span">Пицца x{item.count_pizza}</Typography>
@@ -439,7 +443,7 @@ class ListOrders_ extends React.Component {
       is_map: 0
     };
     
-    let res = await this.getData('get_orders_v5', data);
+    let res = await this.getData('get_orders_v6', data);
     
     if( res === false ){
       

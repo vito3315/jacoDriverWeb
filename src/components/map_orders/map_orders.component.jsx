@@ -179,7 +179,7 @@ class MapOrders_ extends React.Component {
       is_map: 1
     };
     
-    let res = await this.getData('get_orders_v5', data);
+    let res = await this.getData('get_orders_v6', data);
     
     if( res === false ){
       
@@ -529,11 +529,11 @@ class MapOrders_ extends React.Component {
         </Backdrop>
         
         <div style={{ position: 'absolute', zIndex: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '90%', left: '5%', bottom: 50, backgroundColor: '#000', opacity: 0.5, borderRadius: 60 }}>
-          <Button style={{ marginLeft: 38, color: this.state.type.id == 1 ? 'green' : '#fff', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 1) }>Активные</Button>
-          <Button style={{ color: this.state.type.id == 2 ? 'green' : '#fff', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 2) }>Мои</Button>
-          <Button style={{ color: this.state.type.id == 5 ? 'green' : '#fff', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 5) }>У других</Button>
+          <Button className='noselect' style={{ marginLeft: 38, color: this.state.type.id == 1 ? 'green' : '#fff', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 1) }>Активные</Button>
+          <Button className='noselect' style={{ color: this.state.type.id == 2 ? 'green' : '#fff', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 2) }>Мои</Button>
+          <Button className='noselect' style={{ color: this.state.type.id == 5 ? 'green' : '#fff', fontWeight: 'bold' }} onClick={ this.getOrders.bind(this, true, 5) }>У других</Button>
           
-          <Button style={{ marginRight: 3 }} onClick={this.getOrders.bind(this, true, this.state.type.id)}><CachedIcon style={{ color: '#fff' }} /></Button>
+          <Button className='noselect' style={{ marginRight: 3 }} onClick={this.getOrders.bind(this, true, this.state.type.id)}><CachedIcon style={{ color: '#fff' }} /></Button>
         </div>
         
         <div style={{ position: 'absolute', zIndex: 10, display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '100%', left: 0, bottom: 90 }}>
