@@ -16,7 +16,7 @@ const { App } = require( '../src/components/app' );
 const routes = require( './routes' );
 
 // serve static assets
-app.get( /\.(js|css|map|ico|png|svg)$/, express.static( path.resolve( __dirname, '../dist' ) ) );
+app.get( /\.(js|css|map|ico|png|svg|0vs0tLgjCEDsIFQW_wvJd2PEaaaBkpwYFOypG1dzsl8)$/, express.static( path.resolve( __dirname, '../dist' ) ) );
 
 app.get('/.well-known/acme-challenge/0vs0tLgjCEDsIFQW_wvJd2PEaaaBkpwYFOypG1dzsl8', function(req, res) {
     res.sendFile('../dist/.well-known/acme-challenge/0vs0tLgjCEDsIFQW_wvJd2PEaaaBkpwYFOypG1dzsl8');
