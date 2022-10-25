@@ -362,9 +362,9 @@ class ListOrders_ extends React.Component {
   async componentDidMount(){
     this._isMounted = true;
     
-    if((window.location.protocol == 'http:' || window.location.protocol == 'http') && window.location.hostname != 'localhost'){
+    /*if((window.location.protocol == 'http:' || window.location.protocol == 'http') && window.location.hostname != 'localhost'){
       window.location.href = 'https://jacodriver.ru/'+window.location.pathname;
-    }
+    }*/
     
     if( localStorage.getItem('token') && localStorage.getItem('token').length > 0 ){
       

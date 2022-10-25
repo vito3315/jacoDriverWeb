@@ -121,9 +121,9 @@ class Price_ extends React.Component {
   }
   
   async componentDidMount(){
-    if((window.location.protocol == 'http:' || window.location.protocol == 'http') && window.location.hostname != 'localhost'){
+    /*if((window.location.protocol == 'http:' || window.location.protocol == 'http') && window.location.hostname != 'localhost'){
       window.location.href = 'https://jacodriver.ru/'+window.location.pathname;
-    }
+    }*/
     
     this.getPrice();  
   }

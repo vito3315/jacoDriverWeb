@@ -83,6 +83,6 @@ app.use( '*', async ( req, res ) => {
 } );
 
 // run express server on port 9000
-app.listen( '7990', () => {
-    console.log( 'Express server started at http://localhost:7990' );
+app.listen( '3000', () => {
+    console.log( 'Express server started at http://localhost:3000' );
 } );
