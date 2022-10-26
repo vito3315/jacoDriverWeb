@@ -18,14 +18,13 @@ const routes = require( './routes' );
 // serve static assets
 app.get( /\.(js|css|map|ico|png|svg)$/, express.static( path.resolve( __dirname, '../dist' ) ) );
 
-app.get('*', function(req, res) {
-    //res.redirect('https://' + req.headers.host + req.url);
+app.use((req, res, next) => {
+    if (req.protocol === 'http') {
+        return res.redirect(301, `https://${req.headers.host}${req.url}`);
+    }
 
-    console.log( 'req', req )
-
-    // Or, if you don't want to automatically detect the domain name from the request header, you can hard code it:
-    // res.redirect('https://example.com' + req.url);
-})
+    next();
+});
 
 /*app.use((req, res, next) => {
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private, max-age=10800')
