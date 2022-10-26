@@ -18,14 +18,6 @@ const routes = require( './routes' );
 // serve static assets
 app.get( /\.(js|css|map|ico|png|svg)$/, express.static( path.resolve( __dirname, '../dist' ) ) );
 
-app.use((req, res, next) => {
-    if (req.protocol === 'http') {
-        return res.redirect(301, `https://${req.headers.host}${req.url}`);
-    }
-
-    next();
-});
-
 /*app.use((req, res, next) => {
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private, max-age=10800')
     next()
@@ -33,6 +25,10 @@ app.use((req, res, next) => {
 
 // for any other requests, send `index.html` as a response
 app.use( '*', async ( req, res ) => {
+
+    if (req.protocol === 'http') {
+        return res.redirect(301, `https://${req.headers.host}${req.url}`);
+    }
 
     // get matched route
     const matchRoute = routes.find( route => matchPath( req.originalUrl, route ) );
