@@ -97,10 +97,6 @@ module.exports = {
                     from: path.resolve( __dirname, 'src/firebase-messaging-sw.js' ),
                     to: path.resolve( __dirname, 'dist/firebase-messaging-sw.js' )
                 },
-                {
-                    from: path.resolve( __dirname, '.well-known/acme-challenge/0vs0tLgjCEDsIFQW_wvJd2PEaaaBkpwYFOypG1dzsl8' ),
-                    to: path.resolve( __dirname, 'dist/.well-known/acme-challenge/0vs0tLgjCEDsIFQW_wvJd2PEaaaBkpwYFOypG1dzsl8' )
-                },
             ]
         } ),
     ],

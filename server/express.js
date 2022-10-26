@@ -16,11 +16,13 @@ const { App } = require( '../src/components/app' );
 const routes = require( './routes' );
 
 // serve static assets
-app.get( /\.(js|css|map|ico|png|svg|0vs0tLgjCEDsIFQW_wvJd2PEaaaBkpwYFOypG1dzsl8)$/, express.static( path.resolve( __dirname, '../dist' ) ) );
+app.get( /\.(js|css|map|ico|png|svg)$/, express.static( path.resolve( __dirname, '../dist' ) ) );
 
-app.get('/.well-known/acme-challenge/0vs0tLgjCEDsIFQW_wvJd2PEaaaBkpwYFOypG1dzsl8', function(req, res) {
-    res.sendFile('../dist/.well-known/acme-challenge/0vs0tLgjCEDsIFQW_wvJd2PEaaaBkpwYFOypG1dzsl8');
-});
+http.get('*', function(req, res) {
+    res.redirect('https://' + req.headers.host + req.url);
+    // Or, if you don't want to automatically detect the domain name from the request header, you can hard code it:
+    // res.redirect('https://example.com' + req.url);
+})
 
 /*app.use((req, res, next) => {
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private, max-age=10800')
