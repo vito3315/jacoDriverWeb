@@ -26,10 +26,6 @@ app.get( /\.(js|css|map|ico|png|svg)$/, express.static( path.resolve( __dirname,
 // for any other requests, send `index.html` as a response
 app.use( '*', async ( req, res ) => {
 
-    if (req.protocol === 'http') {
-        return res.redirect(301, `https://${req.headers.host}${req.url}`);
-    }
-
     // get matched route
     const matchRoute = routes.find( route => matchPath( req.originalUrl, route ) );
 
