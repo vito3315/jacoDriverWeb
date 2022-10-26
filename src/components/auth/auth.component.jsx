@@ -25,7 +25,7 @@ const queryString = require('query-string');
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#c03',
+      main: '#c03',  
     }
   },
 });
