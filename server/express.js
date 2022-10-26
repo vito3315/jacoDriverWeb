@@ -19,7 +19,10 @@ const routes = require( './routes' );
 app.get( /\.(js|css|map|ico|png|svg)$/, express.static( path.resolve( __dirname, '../dist' ) ) );
 
 app.get('*', function(req, res) {
-    res.redirect('https://' + req.headers.host + req.url);
+    //res.redirect('https://' + req.headers.host + req.url);
+
+    console.log( 'req', req )
+
     // Or, if you don't want to automatically detect the domain name from the request header, you can hard code it:
     // res.redirect('https://example.com' + req.url);
 })
