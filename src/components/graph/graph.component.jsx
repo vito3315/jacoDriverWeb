@@ -178,7 +178,7 @@ class Graph_ extends React.Component {
     }
     
     let data = {
-      token: await AsyncStorage.getItem('token'),
+      token: localStorage.getItem('token'),
       text: this.state.textErr1,
       err_id: err.id,
       row_id: err.row_id
@@ -209,7 +209,7 @@ class Graph_ extends React.Component {
     }
     
     let data = {
-      token: await AsyncStorage.getItem('token'),
+      token: localStorage.getItem('token'),
       text: this.state.textErr2,
       id: err.id
     };
