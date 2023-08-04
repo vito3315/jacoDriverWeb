@@ -361,7 +361,7 @@ class MapOrders_ extends React.Component {
       console.log(coords)
       //alert( coords['latitude'] + ', ' + coords['longitude']) 
 
-      actionOrder(id, type, coords)
+      this.actionOrder(id, type, coords)
     }
     
     function error({ message }) {
