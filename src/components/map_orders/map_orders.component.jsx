@@ -66,7 +66,7 @@ class MapOrders_ extends React.Component {
   async componentDidMount(){
     this._isMounted = true;
     
-    if((window.location.protocol == 'http:' || window.location.protocol == 'http') && window.location.hostname != 'localhost'){
+    if((window.location.protocol == 'http:' || window.location.protocol == 'http') && window.location.hostname != 'localhost' && window.location.hostname != '192.168.1.56'){
       window.location.href = 'https://jacodriver.ru/'+window.location.pathname;
     }
     
@@ -349,42 +349,94 @@ class MapOrders_ extends React.Component {
     }
   }
   
-  async actionOrder(id, type){
-    //1 - get / 2 - close / 3 - finish
-    
+  checkCoord(id, type){
+    const driver_need_gps = this.state.driver_need_gps;
+
     navigator.geolocation.getCurrentPosition(success, error, {
       // высокая точность
       enableHighAccuracy: true
     })
     
     function success({ coords }) {
-      
+      console.log(coords)
+      //alert( coords['latitude'] + ', ' + coords['longitude']) 
+
+      actionOrder(id, type, coords)
     }
     
     function error({ message }) {
-      if( parseInt(this.state.driver_need_gps) == 1 ){
+      if( parseInt(driver_need_gps) == 1 ){
         alert('Чтобы осуществлять доставку заказов, надо разрешить определение местоположения');
         
         return;
       }
     }
+  }
+
+  async actionOrder(id, type, coords = {}){
+    //1 - get / 2 - close / 3 - finish
+    
+    //const driver_need_gps = this.state.driver_need_gps;
+
+    /*navigator.geolocation.getCurrentPosition(success, error, {
+      // высокая точность
+      enableHighAccuracy: true
+    })
+    
+    function success({ coords }) {
+      console.log(coords)
+    }
+    
+    function error({ message }) {
+      if( parseInt(driver_need_gps) == 1 ){
+        alert('Чтобы осуществлять доставку заказов, надо разрешить определение местоположения');
+        
+        return;
+      }
+    }*/
     
     this.setState({
       is_load: true
     })
     
+    //return ;
+
     this.setState({
       is_open_order: false,
       showItems: []
     })
     
     if( parseInt(type) == 3 ){
-      navigator.geolocation.getCurrentPosition(success, error, {
+      /*navigator.geolocation.getCurrentPosition(success, error, {
         // высокая точность
         enableHighAccuracy: true
-      })
+      })*/
       
-      function success({ coords }) {
+      const { latitude, longitude } = coords
+        
+      let data1 = {
+        token: localStorage.getItem('token'),
+        order_id: id,
+        lat: latitude,
+        lon: longitude,
+      };
+      
+      fetch('https://jacochef.ru/api/site/driver.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type':'application/x-www-form-urlencoded'},
+        body: queryString.stringify({
+          type: 'checkPosition', 
+          data: JSON.stringify( data1 )
+        })
+      }).then(res => res.json()).then(json => {
+        console.log( 'res1', json )
+      })
+      .catch(err => { 
+        console.log( err )
+      });
+
+      /*function success({ coords }) {
         const { latitude, longitude } = coords
         
         let data1 = {
@@ -413,7 +465,7 @@ class MapOrders_ extends React.Component {
       function error({ message }) {
         console.log(message) // при отказе в доступе получаем PositionError: User denied Geolocation
         alert('Не удалось опеределить местоположение')
-      }
+      }*/
     }
     
     let data = {
@@ -580,7 +632,7 @@ class MapOrders_ extends React.Component {
             onClose={ () => { this.setState({ is_open_order: false, showItems: [] }) } }
           >
             { this.state.showItems.map( (item, key) =>
-              <CardItemList key={key} item={item} actionOrder={this.actionOrder.bind(this)} />
+              <CardItemList key={key} item={item} actionOrder={this.checkCoord.bind(this)} />
             )}
           </Drawer>
         </React.Fragment>
